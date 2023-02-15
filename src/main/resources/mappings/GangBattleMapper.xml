@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.GangBattleMapper">
+	<sql id="GANGBATTLE_LIST">
+		WEEK,
+		VALUE
+	</sql>
+	<!-- 查询角色是否有该件物品且 物品在背包内 -->
+	<select id="selectGangBattle" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.GangBattle">
+		SELECT WEEK,
+		VALUE FROM gangbattle WHERE WEEK = #{ week }
+	</select>
+	<!-- 购买添加物品 -->
+	<insert id="addGangBattle" parameterType="org.come.entity.GangBattle">
+		insert into
+		gangbattle
+		values(#{ week },#{ value })
+	</insert>
+	<!-- 修改角色物品信息 -->
+	<update id="updataGangBattle" parameterType="org.come.entity.GangBattle">
+		update gangbattle 
+		<set >
+      <if test="week != null" >
+        WEEK = #{ week },
+      </if>
+      <if test="value != null" >
+        VALUE = #{value,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where WEEK = #{ week }
+	</update>
+</mapper>

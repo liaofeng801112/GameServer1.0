@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.managerTableMapper" >
+  <resultMap id="BaseResultMap" type="org.come.bean.managerTable" >
+    <id column="MANAEID" property="manaeid" jdbcType="DECIMAL" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="RELNAME" property="relname" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MANAEID, USERNAME, PWD, RELNAME, CREATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultType="org.come.bean.managerTable" parameterType="java.math.BigDecimal" >
+    select 
+    *
+    from MANAGERTABLE
+    where MANAEID = #{manaeid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from MANAGERTABLE
+    where MANAEID = #{manaeid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="org.come.bean.managerTable" >
+    insert into MANAGERTABLE (USERNAME, PWD, 
+RELNAME, CREATETIME,FLAG)
+    values ( #{username,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{relname,jdbcType=VARCHAR}, sysdate,1)
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.bean.managerTable" >
+    insert into MANAGERTABLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="manaeid != null" >
+        MANAEID,
+      </if>
+      <if test="username != null" >
+        USERNAME,
+      </if>
+      <if test="pwd != null" >
+        PWD,
+      </if>
+      <if test="relname != null" >
+        RELNAME,
+      </if>
+      <if test="createtime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="manaeid != null" >
+        #{manaeid,jdbcType=DECIMAL},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="relname != null" >
+        #{relname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.bean.managerTable" >
+    update MANAGERTABLE
+    <set >
+      <if test="username != null" >
+        USERNAME = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="relname != null" >
+        RELNAME = #{relname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CREATETIME = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where MANAEID = #{manaeid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.bean.managerTable" >
+    update MANAGERTABLE
+    set USERNAME = #{username,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      RELNAME = #{relname,jdbcType=VARCHAR},
+      CREATETIME = #{createtime,jdbcType=TIMESTAMP}
+    where MANAEID = #{manaeid,jdbcType=DECIMAL}
+  </update>
+  
+ <select id="selectByUsername" parameterType="org.come.bean.managerTable"  resultType="org.come.bean.managerTable">
+ 
+     select * from managerTable where USERNAME=#{username}
+ </select>
+ 
+ 
+ <!-- 分页查询用户 -->
+ <select id="selectManageForPage" parameterType="int" resultType="org.come.bean.managerTable"> 
+ 
+     SELECT * FROM (Select ROWNUM AS ROWNO, T.*   from managerTable T
+
+     where  ROWNUM &lt;= (#{pageNumber}*10)) TABLE_ALIAS WHERE TABLE_ALIAS.ROWNO  &gt;= ((#{pageNumber}-1)*10+1)
+
+ </select>
+</mapper>

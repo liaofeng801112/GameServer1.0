@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.OneArenaRoleMapper">
+
+	<!-- 新增玩家排名 排名总数加1 -->
+	<insert id="insertOneArenaRole" parameterType="come.tool.oneArena.OneArenaRole">
+		insert into
+		OneArenaRole
+		(roleID,place,skin,name,lvl)
+		values
+		(#{role.roleId},(select Count(roleID)
+		OneArenaRole from OneArenaRole)+1,#{role.skin},#{role.name},#{role.lvl})
+	</insert>
+	<!-- 记录排名 重置奖励标识 -->
+	<update id="updateDayReset">
+		update OneArenaRole set placePast=place,isAward=0 where placePast!=place or isAward=1
+	</update>
+	<!-- 批量获取排名数据 -->
+	<select id="selectRankRoles" parameterType="java.util.List"	resultType="come.tool.oneArena.OneArenaRole">
+		select ROLEID,PLACE,PLACEPAST,ISAWARD,SKIN,NAME,LVL from OneArenaRole WHERE
+		place IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by PLACE
+	</select>
+	<!-- 根据角色id获取数据 -->
+	<select id="selectRole" parameterType="java.math.BigDecimal" resultType="come.tool.oneArena.OneArenaRole">
+		select * from OneArenaRole where ROLEID = #{roleID}
+	</select>
+	<!-- 修改排名 -->
+	<update id="updateRankRole" >
+		update OneArenaRole set place = #{rank},skin = #{skin},name = #{name},lvl = #{lvl} where ROLEID = #{roleID}
+	</update>
+	<!-- 获取当前排名 -->
+	<select id="selectRank" parameterType="java.math.BigDecimal" resultType="java.lang.Integer">
+		select place from OneArenaRole where ROLEID = #{roleID}
+	</select>
+	<!-- 获取昨日排名 且还未领取奖励 -->
+	<select id="selectRankPast" parameterType="java.math.BigDecimal" resultType="java.lang.Integer">
+	   select placePast from OneArenaRole where ROLEID = #{roleID} and isAward = 0
+	</select>
+    <update id="updateDayResetRole" parameterType="java.math.BigDecimal">
+        UPDATE  OneArenaRole set isAward = 1  where ROLEID = #{roleID} and isAward = 0
+    </update>
+</mapper>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.RoleTableMapper">
+	<sql id="LOGINRESULT_LIST">
+		BONE,
+		SPIR,
+		POWER,
+		SPEED,
+		GANGNAME,
+		PASSWORD,
+		SAVEGOLD,
+		GANGPOST,
+		CONTRIBUTION,
+		ACHIEVEMENT,
+		NEWROLE,
+		RESISTANCE,
+		BORN,
+		TASKDAILY,
+		UPTIME,
+		TIMINGGOOD,
+		TURNAROUND,
+		MARRYOBJECT,
+		SKILLS,
+		CAPTAIN,
+		LOCALNAME,
+		SEX,
+		RACE_NAME,
+		USER_ID,
+		X,
+		Y,
+		MAPID,
+		USERNAME,
+		USERPWD,
+		SPECIES_ID,
+		GANG_ID,
+		BOOTH_ID,
+		CODECARD,
+		EXPERIENCE,
+		GOLD,
+		GRADE,
+		HP,
+		MOUNT_ID,
+		MP,
+		PKRECORD,
+		PRESTIGE,
+		RACE_ID,
+		ROLE_ID,
+		ROLENAME,
+		SUMMONING_ID,
+		TITLE,
+		TROOP_ID,
+		PATH,
+		SERVERMESTRING,
+        taskComplete,
+        taskData,
+        FIGHTING,
+        DBEXP,
+        SCORE,
+        KILL,
+        babyId,
+        MONEY,
+        DRAWING,
+        SKILL_ID,
+        CALM,
+        FMSLD,
+        XIUWEI,
+        EXTRAPOINT,
+        Paysum,Daypaysum,Dayandpayorno,Dayfirstinorno,Daygetorno,Vipget,lowOrHihtpack,PALS,meridians,ATTACHPACK,hjmax,xingpans
+	</sql>
+
+	<sql id="ROLETABLE_LIST">
+		ROLE_ID,
+		USER_ID,
+		SPECIES_ID,
+		SUMMONING_ID,
+		GANG_ID,
+		MOUNT_ID,
+		TROOP_ID,
+		RACE_ID,
+		SKILL_ID,
+		BOOTH_ID,
+		TASK_ID,
+		HP,
+		MP,
+		GOLD,
+		CODECARD,
+		EXPERIENCE,
+		GRADE,
+		PRESTIGE,
+		PKRECORD,
+		ROLENAME,
+		TITLE,
+		PATH,
+		SEX,
+		LOCALNAME,
+		SKILL,
+		X,
+		Y,
+		MAPID,
+		UPTIME,
+		GANGPOST,
+		ACHIEVEMENT,
+		CONTRIBUTION,
+		BONE,
+		SPIR,
+		POWER,
+		SPEED,
+		CAPTAIN,
+		SAVEGOLD,
+		PASSWORD,
+		GANGNAME,
+		HAVEBABY,
+		NEWROLE,
+		RACENAME,
+		MAXEXP,
+		MARRYOBJECT,
+		SKILLS,
+		TIMINGGOOD,
+		TURNAROUND,
+		TASKDAILY,
+		BORN,
+		RESISTANCE,
+		SERVERMESTRING,FIGHTING,DBEXP,SCORE,KILL,BABYID,DRAWING,SKILL_ID,
+		CALM,
+        FMSLD,
+        XIUWEI,
+        EXTRAPOINT,
+        Paysum,Daypaysum,Dayandpayorno,Dayfirstinorno,Daygetorno,Vipget,lowOrHihtpack,meridians,ATTACHPACK,hjmax
+	</sql>
+	<sql id="GANG_LIST">
+	    ROLE_ID,ROLENAME,GANGPOST,RACE_NAME,GRADE,CONTRIBUTION,UPTIME
+	</sql>
+	<!-- 查找角色名是否存在 -->
+	<select id="selectRoleTableByRoleName" parameterType="String"
+			resultType="org.come.entity.RoleTable">
+		SELECT
+		<include refid="ROLETABLE_LIST" />
+		FROM role_table WHERE rolename = #{ rolename }
+	</select>
+	<!-- 创建角色 -->
+	<insert id="insertIntoRoleTable" parameterType="org.come.bean.LoginResult">
+		<!-- <selectKey keyProperty="role_id" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select seq_roletable_id.nextval from dual
+		</selectKey> -->
+		insert into
+		role_table(role_id,user_id,species_id,race_id,hp,mp,
+		rolename,sex,localname,title,SERVERMESTRING)
+		values(#{role_id},#{user_id},#{species_id},#{race_id},#{hp},#{mp},
+		#{rolename},#{sex},#{localname},#{title},#{serverMeString})
+	</insert>
+
+	<!-- 根据帮派ID查找帮派 -->
+	<select id="findGangManberByGangID" parameterType="java.math.BigDecimal"
+			resultType="org.come.bean.LoginResult">
+		SELECT
+		<include refid="GANG_LIST" />
+		FROM LOGINTABLE WHERE GANG_ID = #{ gang_id }
+	</select>
+	<!-- 根据角色id查询金钱 -->
+	<select id="selectMoneyRoleID" parameterType="java.math.BigDecimal"
+			resultType="java.math.BigDecimal">
+		SELECT GOLD
+		FROM LOGINTABLE WHERE ROLE_ID = #{ role_id }
+	</select>
+	<!-- 根据角色id修改金钱 -->
+	<update id="updateMoneyRoleID">
+		UPDATE role_table
+		SET gold=nvl(#{ gold },gold)
+		WHERE role_id = #{ role_id }
+	</update>
+	<!-- 修改角色帮派信息 -->
+	<update id="updateRole" parameterType="org.come.entity.RoleTable">
+		UPDATE role_table
+		SET
+		GANG_ID = nvl(#{ gang_id },0),
+		gangpost=#{ gangpost },
+		gangname=#{ gangname }
+		WHERE role_id = #{ role_id }
+	</update>
+	<!-- 修改角色名称伴侣信息 -->
+	<update id="updateByPrimaryKey" parameterType="org.come.entity.RoleTable">
+    update ROLE_TABLE set
+      ROLENAME =#{rolename,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR},
+      MARRYOBJECT = #{marryObject,jdbcType=VARCHAR}
+    where ROLE_ID = #{role_id,jdbcType=DECIMAL}
+  </update>
+	<!-- 退出时修改角色信息 -->
+	<update id="updateRoleWhenExit" parameterType="org.come.bean.LoginResult">
+		UPDATE ROLE_TABLE SET
+		species_id=nvl(#{ species_id },species_id),
+		summoning_id=#{
+		summoning_id },
+		mount_id=#{ mount_id },
+		race_id=nvl(#{ race_id },race_id),
+		hp=nvl(#{ hp },hp),
+		mp=nvl(#{ mp },mp),
+		gold=nvl(#{ gold },gold),
+		codecard=nvl(#{ codecard },codecard),
+		experience=nvl(#{ experience },experience),
+		grade=nvl(#{ grade },grade),
+		prestige=nvl(#{ prestige },prestige),
+		pkrecord=nvl(#{ pkrecord },pkrecord),
+		rolename=nvl(#{ rolename },rolename),
+		title=nvl(#{ title },title),
+		sex=nvl(#{ sex },sex),
+		localname=nvl(#{ localname },localname),
+		achievement=nvl(#{ achievement },achievement),
+		contribution=nvl(#{ contribution },contribution),
+		bone=nvl(#{ bone },bone),
+		spir=nvl(#{ spir },spir),
+		power=nvl(#{ power },power),
+		speed=nvl(#{ speed },speed),
+		savegold=nvl(#{ savegold },savegold),
+		password=nvl(#{ password },password),
+		havebaby=#{ havebaby },
+		x =nvl(#{ x },x),
+		y =nvl(#{ y },y),
+		mapid = nvl(#{ mapid },mapid),
+		uptime = nvl(#{ uptime },uptime),
+		racename =nvl(#{ race_name },racename),
+		marryObject = #{ marryObject },
+		SKILLS = #{ skills },
+		timinggood = #{ TimingGood },
+		TurnAround =nvl(#{ TurnAround },TurnAround) ,
+		taskDaily=#{ taskDaily },
+		born = #{ born },
+		resistance = nvl(#{resistance},resistance),
+		booth_id=#{ booth_id },
+		taskComplete =#{taskComplete},
+		taskData =#{taskData},
+		fighting=#{fighting},
+		DBExp=#{DBExp},
+		Score=#{Score},
+		Kill=#{Kill},
+		babyId=#{babyId},DRAWING=nvl(#{drawing},drawing),
+		SKILL_ID=nvl(#{skill_id},skill_id),
+		CALM=nvl(#{calm},calm),
+		FMSLD=nvl(#{fmsld},fmsld),
+		XIUWEI=nvl(#{xiuwei},xiuwei),
+		EXTRAPOINT = #{extraPoint},
+		Paysum = #{Paysum},
+		Daypaysum = #{Daypaysum},
+		Dayandpayorno = #{Dayandpayorno},
+		Dayfirstinorno = #{Dayfirstinorno},
+		Daygetorno = #{Daygetorno},
+		Vipget = #{Vipget},
+		lowOrHihtpack = #{lowOrHihtpack},
+		pals = #{pals},
+		GANGPOST = #{gangpost},
+		TROOP_ID = #{troop_id},
+		meridians = #{meridians},
+		ATTACHPACK = #{attachPack},
+		hjmax = #{hjmax},
+		xingpans = #{xingpans}
+		WHERE role_id = #{role_id}
+	</update>
+	<!-- 查询排行榜 -->
+	<select id="selectOrderByType" parameterType="java.lang.Integer"
+			resultType="org.come.bean.LoginResult" >
+		select a.*,rownum from (select role_id,rolename,grade,species_id
+		<if test="_parameter==1">,gold</if>
+		<if test="_parameter==3">,splitstr(score,'帮派积分') bangScore</if>
+		<if test="_parameter==6">,pkrecord</if>
+		<if test="_parameter==7">,hjmax</if>
+		from logintable  order by
+		<if test="_parameter==1">gold</if>
+		<if test="_parameter==2">grade</if>
+		<if test="_parameter==3">bangScore</if>
+		<if test="_parameter==6">pkrecord</if>
+		<if test="_parameter==7">hjmax</if>
+		desc
+		) a where rownum &lt;= 50
+	</select>
+	<!-- 查询水陆大会排行榜 -->
+	<select id="selectSLDH" resultType="org.come.bean.LoginResult" >
+     SELECT r.role_id,r.rolename,r.grade,r.species_id,p.bangScore 
+     FROM (SELECT a.role_id,sldh as bangScore FROM (SELECT role_id,sldh FROM pack_record where sldh>0 order by sldh desc) a where ROWNUM  &lt;=50) p,role_table r 
+     where p.role_id=r.role_id order by p.bangScore desc
+   </select>
+	<!-- 角色id查询 -->
+	<select id="selectRoleID" parameterType="java.math.BigDecimal"
+			resultType="org.come.bean.LoginResult">
+		SELECT
+		<include refid="LOGINRESULT_LIST" />
+		FROM LOGINTABLE WHERE ROLE_ID=#{ role_id }
+	</select>
+	<!-- 依据角色ID进行修改解锁码 -->
+	<update id="updateRolePwdForRid"  parameterType="org.come.entity.RoleTable" >
+	   update role_table set password=#{password} where role_id=#{role_id}
+	</update>
+	<!-- 查询角色帮派信息 -->
+	<select id="selectGang" parameterType="java.math.BigDecimal"
+			resultType="org.come.entity.RoleTable">
+		SELECT ROLE_ID,ROLENAME,GANG_ID,GANGNAME,GANGPOST FROM role_table WHERE ROLE_ID=#{ role_id }
+	</select>
+	<!-- 修改角色帮派信息 -->
+	<update id="updateGang"  parameterType="org.come.entity.RoleTable" >
+	   update role_table set 
+	   GANG_ID=nvl(#{gang_id},0),GANGNAME=#{gangname},GANGPOST=#{gangpost} 
+	   where role_id=#{role_id}
+	</update>
+	<!-- 查询最大ID-->
+	<select id="selectRoleMax" resultType="java.math.BigDecimal">
+		select max(ROLE_ID) from role_table
+   </select>
+
+	<!-- zrikka 2020-0408 -->
+	<!-- 查询某个账号的所有角色 -->
+	<select id="selectRoleByUserid" resultType="org.come.bean.LoginResult">
+		SELECT 
+		* 
+		FROM role_table WHERE user_id = #{ userid } or user_id = #{ fuserid } 
+	</select>
+	<!-- 查询某个角色 -->
+	<select id="selectRoleByRoleId" resultType="org.come.bean.LoginResult">
+		SELECT 
+		* 
+		FROM role_table WHERE role_id = #{ roleid } 
+	</select>
+	<!-- 角色状态更新 -->
+	<update id="updateRoleStatues">
+		update role_table set user_id = 
+		( select 0 - user_id from role_table where role_id = #{roleid} ) 
+		where role_id = #{roleid} 
+	</update>
+	<!-- 角色状态更新 -->
+	<update id="updateRoleBelong">
+		update role_table set user_id = #{userid} , password = '' where role_id = #{roleid} 
+	</update>
+	<!-- 角色id查询 -->
+	<select id="selectRoleName" parameterType="java.lang.String"
+			resultType="org.come.bean.LoginResult">
+		SELECT
+		<include refid="LOGINRESULT_LIST" />
+		FROM LOGINTABLE WHERE ROLENAME=#{ rolename }
+	</select>
+	<!-- 修改全民竞技积分 -->
+	<update id="addQMJJ" >
+    update role_table 
+    set PKRECORD=PKRECORD+#{add,jdbcType=DECIMAL} 
+    where ROLE_ID = #{roleid,jdbcType=DECIMAL}
+    </update>
+</mapper>

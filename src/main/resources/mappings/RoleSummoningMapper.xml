@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.come.mapper.RoleSummoningMapper">
+	<sql id="PET_LIST">
+		SUMMONINGID,
+		SUMMONINGSKIN,
+		STYE,
+		HP,
+		MP,
+		AP,
+		SP,
+		GROWLEVEL,
+		RESISTANCE,
+		SKILL,
+		GOLD,
+		WOOD,
+		SOIL,
+		WATER,
+		FIRE,
+		SUMMONINGNAME,
+		SID,
+		SSN,
+		ROLEID,
+		BONE,
+		SPIR,
+		POWER,
+		SPEED,
+		CALM,
+		GRADE,
+		EXP,
+		FAITHFUL,
+		FRIENDLINESS,
+		BASISHP,
+		BASISMP,
+		OPENSEAL,
+		INNERGOODS,
+		DRAGON,
+		PETSKILLS,
+		TURNROUNT,
+		NEDANRESISTANCE,REVEALNUM,
+		FLYUPNUM,BEASTSKILLS,FOURATTRIBUTES,skillData,zqk,lyk,alchemynum,growUpDanNum,ColorScheme,draC,TRAINNUM,petlock,lingxi
+	</sql>
+	<select id="selectMaxID" resultType="java.math.BigDecimal">
+		select max(SID) from Role_Summoning
+	</select>
+	<!-- 查询所有角色所有召唤兽 -->
+	<select id="selectAllRoleSummonings" resultType="org.come.entity.RoleSummoning">
+		select
+		<include refid="PET_LIST" />
+		from Role_Summoning
+	</select>
+	<!-- 查询该角色所有召唤兽 -->
+	<select id="selectRoleSummoningsByRoleID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.RoleSummoning">
+		select
+		<include refid="PET_LIST" />
+		from Role_Summoning where roleid = #{ roleid }
+	</select>
+
+	<!-- 查询召唤兽信息 -->
+	<select id="selectRoleSummoningsByRgID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.RoleSummoning">
+		select
+		<include refid="PET_LIST" />
+		from Role_Summoning where SID = #{ sid }
+	</select>
+
+	<!-- 删除召唤兽 -->
+	<delete id="deleteRoleSummoningBySid" parameterType="java.math.BigDecimal">
+		delete from
+		ROLE_SUMMONING where SID = #{ sid }
+	</delete>
+
+	<!-- 添加召唤兽 -->
+	<insert id="insertRoleSummoning" parameterType="org.come.entity.RoleSummoning">
+		
+		insert into
+		ROLE_SUMMONING(SUMMONINGID,SUMMONINGSKIN,STYE,HP,MP,AP,SP,GROWLEVEL,RESISTANCE,SKILL,GOLD,WOOD,SOIL,WATER,FIRE,
+		SUMMONINGNAME,SID,SSN,ROLEID,BASISHP,
+		BASISMP,skillData,ColorScheme)
+		values(#{ summoningid },#{ summoningskin }, #{ stye }, 
+		#{ hp }, #{ mp }, #{ ap }, #{ sp }, #{ growlevel },
+		#{ resistance }, #{ skill }, #{ gold }, #{ wood },
+		#{ soil }, #{ water},#{ fire }, #{ summoningname },
+		#{ sid },#{ ssn }, #{ roleid },#{ basishp },#{ basismp },
+		#{skillData},#{ColorScheme})
+	</insert>
+
+	<!-- 修改召唤兽的角色ID -->
+	<update id="updateRoleSummoningRoleID" parameterType="org.come.entity.RoleSummoning">
+		UPDATE
+		ROLE_SUMMONING SET roleid = #{ roleid } where sid = #{ sid }
+	</update>
+
+	<!-- 修改召唤兽的属性＼名字 -->
+	<update id="updateRoleSummoning" parameterType="org.come.entity.RoleSummoning">
+		UPDATE
+		ROLE_SUMMONING SET roleid = #{ roleid }, stye=#{ stye }, hp=#{ hp }, mp=#{ mp }, ap=#{ ap }, sp=#{ sp },
+		growlevel=#{ growlevel },resistance=#{ resistance }, skill=#{ skill },
+		gold=#{ gold }, wood=#{ wood }, soil=#{ soil}, water=#{ water },
+		fire=#{ fire }, summoningname=#{ summoningname },
+		ssn=#{ ssn },bone= #{bone }, spir=#{ spir }, power=#{ power },
+		speed= #{ speed },calm= #{calm },
+		grade=#{ grade },exp=#{ exp },faithful=#{ faithful },
+		friendliness=#{ friendliness },BASISHP=#{ basishp},
+		BASISMP=#{basismp},openSeal=#{openSeal},innerGoods = #{innerGoods},dragon = #{dragon},
+		petSkills = #{ petSkills },
+		turnRount = #{turnRount},NedanResistance = #{ NedanResistance },revealNum =
+		#{revealNum},flyupNum=#{flyupNum},summoningskin=#{summoningskin},beastSkills=#{beastSkills},
+		FOURATTRIBUTES = #{ fourattributes },skillData = #{ skillData },zqk = #{ zqk },lyk = #{ lyk },
+		growUpDanNum = #{growUpDanNum},alchemynum=#{ alchemynum },ColorScheme=#{ColorScheme},draC=#{draC},TRAINNUM=#{trainNum}
+		,petlock=#{petlock},lingxi=#{lingxi}
+		where sid = #{ sid }
+	</update>
+	
+	
+	
+	<!-- zeng-190711修改  以下都是 -->
+	<resultMap type="org.come.entity.RolesummoningRoleUser" id="rolesummoningRoleUser">
+		<result column="SPIR" property="spir"/>
+		<result column="POWER" property="power"/>
+		<result column="SPEED" property="speed"/>
+		<result column="CALM" property="calm"/>
+		<result column="GRADE" property="grade"/>
+		<result column="EXP" property="exp"/>
+		<result column="FAITHFUL" property="faithful"/>
+		<result column="FRIENDLINESS" property="friendliness"/>
+		<result column="PRICE" property="price"/>
+		<result column="BASISHP" property="basishp"/>
+		<result column="BASISMP" property="basismp"/>
+		<result column="BASISAP" property="basisap"/>
+		<result column="BASISSP" property="basissp"/>
+		<result column="OPENSEAL" property="openSeal"/>
+		<result column="INNERGOODS" property="innerGoods"/>
+		<result column="DRAGON" property="dragon"/>
+		<result column="EXTRAHP" property="extrahp"/>
+		<result column="EXTRAMP" property="extramp"/>
+		<result column="EXTRAAP" property="extraap"/>
+		<result column="EXTRASP" property="extrasp"/>
+		<result column="PETSKILLS" property="petSkills"/>
+		<result column="TURNROUNT" property="turnRount"/>
+		<result column="GRADEHP" property="gradehp"/>
+		<result column="GRADEMP" property="grademp"/>
+		<result column="NEDANRESISTANCE" property="NedanResistance"/>
+		<result column="REVEALNUM" property="revealNum"/>
+		<result column="FLYUPNUM" property="flyupNum"/>
+		<result column="BEASTSKILLS" property="beastSkills"/>
+		<result column="FOURATTRIBUTES" property="fourattributes"/>
+		<result column="SKILLDATA" property="skillData"/>
+		<result column="LYK" property="lyk"/>
+		<result column="ZQK" property="zqk"/>
+		<result column="ALCHEMYNUM" property="alchemynum"/>
+		<result column="GROWUPDANNUM" property="growUpDanNum"/>
+		<result column="COLORSCHEME" property="ColorScheme"/>
+		<result column="DRAC" property="drac"/>
+		<result column="TRAINNUM" property="trainnum"/>
+		<result column="PETLOCK" property="petlock"/>
+		<result column="ROLENAME" property="rolename"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="USERNAME" property="username"/>
+		<result column="SUMMONINGID" property="summoningid"/>
+		<result column="SUMMONINGSKIN" property="summoningskin"/>
+		<result column="STYE" property="stye"/>
+		<result column="BASISHP" property="basishp"/>
+		<result column="BASISMP" property="basismp"/>
+		<result column="BASISAP" property="basisap"/>
+		<result column="BASISSP" property="basissp"/>
+		<result column="HP" property="hp"/>
+		<result column="MP" property="mp"/>
+		<result column="AP" property="ap"/>
+		<result column="SP" property="sp"/>
+		<result column="GROWLEVEL" property="growlevel"/>
+		<result column="RESISTANCE" property="resistance"/>
+		<result column="SKILL" property="skill"/>
+		<result column="GOLD" property="gold"/>
+		<result column="WOOD" property="wood"/>
+		<result column="SOIL" property="soil"/>
+		<result column="WATER" property="water"/>
+		<result column="FIRE" property="fire"/>
+		<result column="SUMMONINGNAME" property="summoningname"/>
+		<result column="SID" property="sid"/>
+		<result column="SSN" property="ssn"/>
+		<result column="ROLEID" property="roleid"/>
+		<result column="BONE" property="bone"/>
+		<result column="LINGXI" property="lingxi"/>
+	</resultMap>
+	
+	<select id="selectRsRU" resultMap="rolesummoningRoleUser">
+		SELECT * FROM 
+		(
+		    SELECT A.* , ROWNUM RN  from 
+		    (
+		    	SELECT SUMMONINGID,SUMMONINGNAME,RESISTANCE,SKILL,SKILLDATA,FOURATTRIBUTES,LYK,
+		    	ZQK,ALCHEMYNUM,GROWUPDANNUM,ROLENAME,BASISHP,BASISMP,BASISAP,BASISSP,GROWLEVEL,
+		    	TURNROUNT,GRADE 
+		    	FROM ROLESUMMONING_ROLE_USERTABLE 
+		    	<where>
+		    		<if test="rru.summoningid != null and rru.summoningid != '' ">
+		    			AND SUMMONINGID = #{rru.summoningid} 
+		    		</if>
+		    		<if test="rru.rolename != null and rru.rolename != '' ">
+		    			AND ROLENAME LIKE CONCAT( '%' , CONCAT( #{rru.rolename} , '%'))  
+		    		</if>
+		    		<if test="rru.skill != null and rru.skill != '' ">
+		    			AND SKILL LIKE CONCAT( '%' , CONCAT( #{rru.skill} , '%'))  
+		    		</if>
+		    	</where>
+		    	${rru.orderBy} 
+		    ) A  
+		    WHERE ROWNUM &lt; #{rru.end} 
+		) 
+		WHERE RN &gt;= #{rru.start} 
+	</select>
+	
+	<select id="selectRsRUCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (
+			SELECT SUMMONINGID,SUMMONINGNAME,RESISTANCE,SKILL,SKILLDATA,FOURATTRIBUTES,LYK,
+		    ZQK,ALCHEMYNUM,GROWUPDANNUM,ROLENAME,BASISHP,BASISMP,BASISAP,BASISSP,GROWLEVEL,
+		    TURNROUNT,GRADE 
+		    FROM ROLESUMMONING_ROLE_USERTABLE 
+		    <where>
+		    	<if test="rru.summoningid != null and rru.summoningid != '' ">
+		    		AND SUMMONINGID = #{rru.summoningid} 
+		    	</if>
+		    	<if test="rru.rolename != null and rru.rolename != '' ">
+		    		AND ROLENAME LIKE CONCAT( '%' , CONCAT( #{rru.rolename} , '%'))  
+		    	</if>
+		    	<if test="rru.skill != null and rru.skill != '' ">
+		    		AND SKILL LIKE CONCAT( '%' , CONCAT( #{rru.skill} , '%'))  
+		    	</if>	
+		    </where>
+		)
+	</select>
+	
+	<select id="selectRoleSummoningById" resultMap="rolesummoningRoleUser">
+		SELECT SUMMONINGID,SUMMONINGNAME,RESISTANCE,SKILL,SKILLDATA,FOURATTRIBUTES,LYK,
+		ZQK,ALCHEMYNUM,GROWUPDANNUM,ROLENAME,BASISHP,BASISMP,BASISAP,BASISSP,GROWLEVEL,
+		TURNROUNT,GRADE,LINGXI FROM ROLESUMMONING_ROLE_USERTABLE 
+		WHERE SID = #{summoningid} 
+	</select>
+	
+	
+	<!-- HGC-2020-01-20 -->
+    <!-- 批量删除召唤兽 -->
+	<delete id="deleteRoleSummoningBySidList" parameterType="java.util.List">
+		delete from
+		ROLE_SUMMONING where SID in
+		<foreach collection="list" item="sid" open="(" separator=","
+			close=")">
+			#{ sid }
+		</foreach>
+	</delete>
+
+	<!-- 添加召唤兽 -->
+	<insert id="insertRoleSummoningList" parameterType="java.util.List">
+		insert into
+		ROLE_SUMMONING(
+		SUMMONINGID,SUMMONINGNAME,SUMMONINGSKIN,SSN,STYE,HP,MP,AP,SP,GROWLEVEL,RESISTANCE,
+		SKILL,GOLD,WOOD,SOIL,WATER,FIRE,COLORSCHEME,ROLEID,BONE,SPIR,POWER,SPEED,CALM,GRADE,
+		EXP,FAITHFUL,FRIENDLINESS,SID,BASISHP,BASISMP,OPENSEAL,INNERGOODS,DRAGON,PETSKILLS,
+		TURNROUNT,REVEALNUM,FLYUPNUM,BEASTSKILLS,FOURATTRIBUTES,SKILLDATA,LYK,ALCHEMYNUM,
+		GROWUPDANNUM,DRAC,TRAINNUM,PETLOCK)
+		<foreach collection="list" index="index" item="item"
+			separator="union all">
+			select
+			#{item.summoningid},#{item.summoningname},#{item.summoningskin},#{item.ssn},#{item.stye},#{item.hp},
+			#{item.mp},#{item.ap},#{item.sp},#{item.growlevel},#{item.resistance},#{item.skill},#{item.gold},
+			#{item.wood},#{item.soil},#{item.water},#{item.fire},#{item.ColorScheme},#{item.roleid},#{item.bone},
+			#{item.spir},#{item.power},#{item.speed},#{item.calm},#{item.grade},#{item.exp},#{item.faithful},
+			#{item.friendliness},#{item.sid},#{item.basishp},#{item.basismp},#{item.openSeal},#{item.innerGoods},
+			#{item.dragon},#{item.petSkills},#{item.turnRount},#{item.revealNum},#{item.flyupNum},
+			#{item.beastSkills},#{item.fourattributes},#{item.skillData},#{item.lyk},#{item.alchemynum},
+			#{item.growUpDanNum},#{item.draC},#{item.trainNum},#{item.petlock}
+			form dual
+		</foreach>
+	</insert>
+
+	<!-- 批量修改召唤兽的属性＼名字 -->
+	<update id="updateRoleSummoningList" parameterType="java.util.List">
+		UPDATE
+		ROLE_SUMMONING SET
+		<trim prefix="set" prefixOverrides=",">
+			<trim prefix="roleid =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.roleid}
+				</foreach>
+			</trim>
+			<trim prefix="stye =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.stye}
+				</foreach>
+			</trim>
+			<trim prefix="hp =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.hp}
+				</foreach>
+			</trim>
+			<trim prefix="mp =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.mp}
+				</foreach>
+			</trim>
+			<trim prefix="ap =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.ap}
+				</foreach>
+			</trim>
+			<trim prefix="sp =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.sp}
+				</foreach>
+			</trim>
+			<trim prefix="growlevel =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.growlevel}
+				</foreach>
+			</trim>
+			<trim prefix="resistance =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.resistance}
+				</foreach>
+			</trim>
+			<trim prefix="skill =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.skill}
+				</foreach>
+			</trim>
+			<trim prefix="gold =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.gold}
+				</foreach>
+			</trim>
+			<trim prefix="wood =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.wood}
+				</foreach>
+			</trim>
+			<trim prefix="soil =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.soil}
+				</foreach>
+			</trim>
+			<trim prefix="water =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.water}
+				</foreach>
+			</trim>
+			<trim prefix="fire =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.fire}
+				</foreach>
+			</trim>
+			<trim prefix="summoningname =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.summoningname}
+				</foreach>
+			</trim>
+			<trim prefix="ssn =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.ssn}
+				</foreach>
+			</trim>
+			<trim prefix="bone =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.bone}
+				</foreach>
+			</trim>
+			<trim prefix="spir =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.spir}
+				</foreach>
+			</trim>
+			<trim prefix="power =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.power}
+				</foreach>
+			</trim>
+			<trim prefix="speed =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.speed}
+				</foreach>
+			</trim>
+			<trim prefix="calm =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.calm}
+				</foreach>
+			</trim>
+			<trim prefix="grade =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.grade}
+				</foreach>
+			</trim>
+			<trim prefix="exp =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.exp}
+				</foreach>
+			</trim>
+			<trim prefix="faithful =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.faithful}
+				</foreach>
+			</trim>
+			<trim prefix="friendliness =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.friendliness}
+				</foreach>
+			</trim>
+			<trim prefix="BASISHP =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.basishp}
+				</foreach>
+			</trim>
+			<trim prefix="BASISMP =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.basismp}
+				</foreach>
+			</trim>
+			<trim prefix="openSeal =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.openSeal}
+				</foreach>
+			</trim>
+			<trim prefix="innerGoods =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.innerGoods}
+				</foreach>
+			</trim>
+			<trim prefix="dragon =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.dragon}
+				</foreach>
+			</trim>
+			<trim prefix="petSkills =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.petSkills}
+				</foreach>
+			</trim>
+			<trim prefix="turnRount =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.turnRount}
+				</foreach>
+			</trim>
+			<trim prefix="NedanResistance =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.NedanResistance}
+				</foreach>
+			</trim>
+			<trim prefix="revealNum =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.revealNum}
+				</foreach>
+			</trim>
+			<trim prefix="flyupNum =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.flyupNum}
+				</foreach>
+			</trim>
+			<trim prefix="summoningskin =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.summoningskin}
+				</foreach>
+			</trim>
+			<trim prefix="beastSkills =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.beastSkills}
+				</foreach>
+			</trim>
+			<trim prefix="FOURATTRIBUTES =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.fourattributes}
+				</foreach>
+			</trim>
+			<trim prefix="skillData =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.skillData}
+				</foreach>
+			</trim>
+			<trim prefix="zqk =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.zqk}
+				</foreach>
+			</trim>
+			<trim prefix="lyk =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.lyk}
+				</foreach>
+			</trim>
+			<trim prefix="growUpDanNum =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.growUpDanNum}
+				</foreach>
+			</trim>
+			<trim prefix="alchemynum =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.alchemynum}
+				</foreach>
+			</trim>
+			<trim prefix="ColorScheme =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.ColorScheme}
+				</foreach>
+			</trim>
+			<trim prefix="draC =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.draC}
+				</foreach>
+			</trim>
+			<trim prefix="TRAINNUM =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.trainNum}
+				</foreach>
+			</trim>
+			<trim prefix="petlock =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when sid = #{item.sid} then
+					#{item.petlock}
+				</foreach>
+			</trim>
+		</trim>
+		where
+		<foreach collection="list" item="item" separator="or">
+			sid=#{item.sid}
+		</foreach>
+	</update>
+
+
+	<!-- 添加召唤兽 -->
+	<insert id="insertRoleSummoningSingle" parameterType="org.come.entity.RoleSummoning">
+		insert into
+		ROLE_SUMMONING(
+		SUMMONINGID,SUMMONINGNAME,SUMMONINGSKIN,SSN,STYE,HP,MP,AP,SP,GROWLEVEL,RESISTANCE,
+		SKILL,GOLD,WOOD,SOIL,WATER,FIRE,COLORSCHEME,ROLEID,BONE,SPIR,POWER,SPEED,CALM,GRADE,
+		EXP,FAITHFUL,FRIENDLINESS,SID,BASISHP,BASISMP,OPENSEAL,INNERGOODS,DRAGON,PETSKILLS,
+		TURNROUNT,REVEALNUM,FLYUPNUM,BEASTSKILLS,FOURATTRIBUTES,SKILLDATA,LYK,ALCHEMYNUM,
+		GROWUPDANNUM,DRAC,TRAINNUM,PETLOCK)
+		values(#{summoningid},#{summoningname},#{summoningskin},#{ssn},#{stye},#{hp},
+		#{mp},#{ap},#{sp},#{growlevel},#{resistance},#{skill},#{gold},
+		#{wood},#{soil},#{water},#{fire},#{ColorScheme},#{roleid},#{bone},
+		#{spir},#{power},#{speed},#{calm},#{grade},#{exp},#{faithful},
+		#{friendliness},#{sid},#{basishp},#{basismp},#{openSeal},#{innerGoods},
+		#{dragon},#{petSkills},#{turnRount},#{revealNum},#{flyupNum},
+		#{beastSkills},#{fourattributes},#{skillData},#{lyk},#{alchemynum},
+		#{growUpDanNum},#{draC},#{trainNum},#{petlock})
+	</insert>
+
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.AppVersionMapper">
+	<!-- 三端 -->
+	<resultMap type="org.come.entity.AppVersion" id="appVersion">
+		<result property="ver_id" column="VER_ID" />
+		<result property="ver_url" column="VER_URL" />
+		<result property="ver_sign" column="VER_SIGN" />
+	</resultMap>
+
+	<select id="selectVersionUrl" resultMap="appVersion">
+		SELECT * FROM
+		APPGAMEVERSION WHERE VER_ID &gt; #{version} and VER_SIGN = #{sign}
+		ORDER BY VER_ID
+	</select>
+	
+	
+	<select id="selectPhoneVersion" resultType="java.lang.String">
+		SELECT VER_URL FROM 
+		APPGAMEVERSION WHERE VER_SIGN = 99 
+	</select>
+	
+	<update id="updatePhoneVersion" parameterType="java.lang.String">
+		UPDATE APPGAMEVERSION SET VER_URL = #{version} 
+		WHERE VER_SIGN = 99 
+	</update>
+	
+	<delete id="deleteUserByCondition">
+		delete usertable where user_id in 
+		( select user_id from usertable where to_date(decode(userlastlogin,'0',USERREGIDTSERTIME,userlastlogin)
+		 ,'yyyy-mm-dd hh24:mi:ss') &lt; (sysdate - 60)
+		 and PAYINTEGRATION &lt; 50)
+	</delete>
+	
+	
+	  <resultMap id="goodsrecord" type="org.come.extInterBean.Goodsrecord2">
+		<result column="GRID" property="grid" />
+		<result column="RECORDTYPE" property="recordtype" />
+		<result column="ROLEID" property="roleid" />
+		<result column="OTHERROLE" property="otherrole" />
+		<result column="GOODS" property="goods" />
+		<result column="RECORDTIME" property="recordtime" />
+		<result column="GOODSNUM" property="goodsnum" />
+		<result column="SID" property="sid" />
+		<result column="GOODSNAME" property="goodsname" />
+		<result column="VALUE" property="value" />
+		<result column="USETIME" property="usetime" />
+		<result column="GOODSID" property="goodsid" />
+		<result column="SKIN" property="skin" />
+		<result column="TYPE" property="type" />
+		<result column="QUALITY" property="quality" />
+		<result column="INSTRUCTION" property="instruction" />
+		<result column="RGID" property="rgid" />
+		<result column="STATUS" property="status" />
+		<result column="DEFINEPRICE" property="defineprice" />
+		<result column="GOODLOCK" property="goodlock" />
+	</resultMap>
+	
+	<select id="selectGoodsRecordByPage" resultMap="goodsrecord">
+		SELECT * FROM  
+		(  
+			SELECT A.* , ROWNUM RN  from
+			( SELECT GRID ,RECORDTYPE ,ROLEID ,OTHERROLE ,RECORDTIME ,GOODSNUM ,SID
+			,GOODSNAME ,VALUE ,
+			USETIME ,GOODSID ,SKIN ,TYPE ,QUALITY ,INSTRUCTION ,RGID ,STATUS ,DEFINEPRICE
+			,GOODLOCK
+			FROM GOODSRECORD2   
+			WHERE 1=1 
+			${sql} ) A 
+			WHERE ROWNUM &lt; #{end} 
+		)
+		WHERE RN &gt;= #{start}
+	</select>
+  
+  	<select id="trackGoods" resultMap="goodsrecord">
+		SELECT * FROM  
+		(  
+			SELECT A.* , ROWNUM RN  from
+			( 
+				SELECT GRID ,RECORDTYPE ,ROLEID ,OTHERROLE ,RECORDTIME ,GOODSNUM ,SID
+					,GOODSNAME ,VALUE ,USETIME ,GOODSID ,SKIN ,TYPE ,QUALITY ,INSTRUCTION ,
+					RGID ,STATUS ,DEFINEPRICE,GOODLOCK
+				FROM GOODSRECORD2  
+			 	WHERE RGID = #{rgid} order by grid 
+			) A 
+			WHERE ROWNUM &lt; #{end} 
+		)
+		WHERE RN &gt;= #{start}  
+	</select>
+	
+	<select id="selectShopBuyType" resultType="org.come.extInterBean.ShopBuyTypeResult">
+		SELECT * FROM BUYTYPE 
+	</select>
+	
+	<select id="selectShopBuyRecord" resultType="org.come.extInterBean.ShopBuyRecordResultBean" parameterType="org.come.extInterBean.ShopBuyRecordReqBean">
+		SELECT * FROM  
+		(  
+			SELECT A.* , ROWNUM RN  from
+			( 
+				SELECT GBR.GID,GBR.PRICE,GBR.GOODNUMBER,GBR.NUMBERMONEY,GBR.RECORDTIME,
+				BYT.TYPENAME,UST.USERNAME,ROT.ROLENAME  
+				FROM GOODSBUYRECORD GBR INNER JOIN BUYTYPE BYT ON BYT.BUYTYPE = GBR.BUYTYPE 
+				INNER JOIN USERTABLE UST ON GBR.USERID = UST.USER_ID
+				INNER JOIN ROLE_TABLE ROT ON ROT.ROLE_ID = GBR.ROLEID 
+				<where>
+					<if test="buyType != null and buyType != '' ">
+						and gbr.buytype = #{buyType}
+					</if>
+					<if test="recordTime != null and recordTime != '' ">
+						and recordtime = #{recordTime}
+					</if>
+					<if test="userName != null and userName != '' ">
+						and username = #{userName}
+					</if>
+					<if test="roleName != null and roleName != '' ">
+						and rolename = #{roleName}
+					</if>
+				</where>
+				ORDER BY GBR.RECORDTIME DESC
+			) A 
+			WHERE ROWNUM &lt; #{end} 
+		)
+		WHERE RN &gt;= #{start}  
+	</select>
+
+	<!-- zrikka 2020 0511 -->
+	<!-- 插入物品记录 -->
+	<insert id="insertGoodsRecord" parameterType="java.util.List">
+	  insert into GOODSRECORD2 (GRID, RECORDTYPE, ROLEID, OTHERROLE,  RECORDTIME, 
+	    GOODSNUM, SID, GOODSNAME, VALUE, USETIME, GOODSID, TYPE, QUALITY, 
+	    RGID, STATUS, GOODLOCK )
+	    <foreach collection="list" item="item" index="index" separator="union all">
+			select
+				#{item.grid}, #{item.recordtype}, #{item.roleid}, #{item.otherrole}, sysdate, 
+			    #{item.goodsnum}, #{item.sid}, #{item.goodsname}, #{item.value}, #{item.usetime}, #{item.goodsid},
+			    #{item.type}, #{item.quality}, 
+			    #{item.rgid}, #{item.status}, #{item.goodlock}
+			 from dual
+		</foreach>
+	</insert>
+	
+	<!-- 获取物品记录的序列 -->
+	<select id="selectSequence" resultType="java.math.BigDecimal">
+		select MAX(GRID) from GOODSRECORD2 
+	</select>
+	
+</mapper>	

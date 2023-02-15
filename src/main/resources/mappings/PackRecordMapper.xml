@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.PackRecordMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.PackRecord" >
+    <id column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="RECORD" property="record" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ROLE_ID,RECORD,HELPBB,HELPLING,SUITNUM,
+    COLLECT,SUIT1,SUIT2,SUIT3,SUIT4,SUIT5,
+    SUIT6,SUIT7,SUIT8,SUIT9,SUIT10,SUIT11,TX,LCARD,OTHER
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.come.entity.PackRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PACK_RECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from PACK_RECORD
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from PACK_RECORD
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.come.entity.PackRecordExample" >
+    delete from PACK_RECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.PackRecord" >
+    insert into PACK_RECORD (ROLE_ID, RECORD)
+    values (#{roleId,jdbcType=DECIMAL}, #{record,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.PackRecord" >
+    insert into PACK_RECORD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="record != null" >
+        RECORD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="record != null" >
+        #{record,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.come.entity.PackRecordExample" resultType="java.lang.Integer" >
+    select count(*) from PACK_RECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PACK_RECORD
+    <set >
+      <if test="record.roleId != null" >
+        ROLE_ID = #{record.roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.record != null" >
+        RECORD = #{record.record,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PACK_RECORD
+    set ROLE_ID = #{record.roleId,jdbcType=DECIMAL},
+      RECORD = #{record.record,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.PackRecord" >
+    update PACK_RECORD
+    <set >
+      <if test="record != null" >
+        RECORD = #{record,jdbcType=VARCHAR},
+      </if>
+      <if test="helpBb != null" >
+        HELPBB = #{helpBb,jdbcType=VARCHAR},
+      </if>
+      <if test="helpLing != null" >
+        HELPLING = #{helpLing,jdbcType=VARCHAR},
+      </if>
+       SUITNUM = #{suitNum},
+      <if test="collect != null" >
+        COLLECT = #{collect,jdbcType=VARCHAR},
+      </if>  
+      <if test="suit1 != null" >
+        SUIT1 = #{suit1,jdbcType=VARCHAR},
+      </if>
+      <if test="suit2 != null" >
+        SUIT2 = #{suit2,jdbcType=VARCHAR},
+      </if>
+      <if test="suit3 != null" >
+        SUIT3 = #{suit3,jdbcType=VARCHAR},
+      </if>
+      <if test="suit4 != null" >
+        SUIT4 = #{suit4,jdbcType=VARCHAR},
+      </if>
+      <if test="suit5 != null" >
+        SUIT5 = #{suit5,jdbcType=VARCHAR},
+      </if>
+      <if test="suit6 != null" >
+        SUIT6 = #{suit6,jdbcType=VARCHAR},
+      </if>
+      <if test="suit7 != null" >
+        SUIT7 = #{suit7,jdbcType=VARCHAR},
+      </if>
+      <if test="suit8 != null" >
+        SUIT8 = #{suit8,jdbcType=VARCHAR},
+      </if>
+      <if test="suit9 != null" >
+        SUIT9 = #{suit9,jdbcType=VARCHAR},
+      </if>
+      <if test="suit10 != null" >
+        SUIT10 = #{suit10,jdbcType=VARCHAR},
+      </if>
+      <if test="suit11 != null" >
+        SUIT11 = #{suit11,jdbcType=VARCHAR},
+      </if>
+      <if test="tx != null" >
+        TX = #{tx,jdbcType=VARCHAR},
+      </if>
+      <if test="lCard != null" >
+        LCARD = #{lCard,jdbcType=VARCHAR},
+      </if>
+      <if test="other != null" >
+        OTHER = #{other,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.PackRecord" >
+    update PACK_RECORD
+    set RECORD = #{record,jdbcType=VARCHAR}
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </update>
+  
+  <update id="addSLDH" >
+    update PACK_RECORD 
+    set SLDH=SLDH+#{ add,jdbcType=DECIMAL } 
+    where ROLE_ID = #{ roleid,jdbcType=DECIMAL }
+  </update>
+  <update id="emptySLDH" >
+    update PACK_RECORD set SLDH=0 where SLDH>0
+  </update>
+</mapper>

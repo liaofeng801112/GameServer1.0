@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.MountMapper">
+			<!-- 查找最新表ID -->
+	<select id="selectMaxID" resultType="java.math.BigDecimal">
+		select max(MID) from mount
+	</select>
+	<!-- 查找所有坐骑 -->
+	<select id="selectAllMounts" resultType="org.come.entity.Mount">
+		select MID,
+		MOUNTID,
+		MOUNTNAME,
+		MOUNTLVL,
+		LIVE,
+		SPRI,
+		POWER,
+		BONE,
+		EXP,
+		ROLEID,
+		SID,
+		OTHRERSID,
+		USENUMBER,PROFICIENCY from mount order by roleid, mountid,SID3
+	</select>
+	<select id="selectMountsByRoleID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Mount">
+		select MID,
+		MOUNTID,
+		MOUNTNAME,
+		MOUNTLVL,
+		LIVE,
+		SPRI,
+		POWER,
+		BONE,
+		EXP,
+		ROLEID,
+		SID,
+		OTHRERSID,
+		USENUMBER,PROFICIENCY,SID3 from mount where roleid = #{ roleid } order by mountid
+	</select>
+	
+	<select id="selectMountByRoleIDAndMountID" parameterType="org.come.entity.Mount"
+		resultType="org.come.entity.Mount">
+		select MID,
+		MOUNTID,
+		MOUNTNAME,
+		MOUNTLVL,
+		LIVE,
+		SPRI,
+		POWER,
+		BONE,
+		EXP,
+		ROLEID,
+		SID,
+		OTHRERSID,
+		USENUMBER,PROFICIENCY,SID3 from mount where roleid = #{ roleid } and mountid = #{ mountid }
+	</select>
+
+	<select id="selectMountsByMID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Mount">
+		select MID,
+		MOUNTID,
+		MOUNTNAME,
+		MOUNTLVL,
+		LIVE,
+		SPRI,
+		POWER,
+		BONE,
+		EXP,
+		ROLEID,
+		SID,
+		OTHRERSID,
+		USENUMBER,PROFICIENCY,SID3 from mount where mid = #{ mid }
+	</select>
+
+	<delete id="deleteMountsByMid" parameterType="java.math.BigDecimal">
+		delete from
+		mount where mid=#{mid}
+	</delete>
+
+	<!-- 修改坐骑信息 -->
+	<update id="updateMount" parameterType="org.come.entity.Mount">
+		UPDATE mount SET
+		mountname = #{ mountname }, 
+		spri = #{ spri }, power = #{ power },
+		bone = #{ bone },
+		live = #{ live }, exp = #{
+		exp }, sid = #{
+		sid },
+		othrersid = #{ othrersid }, mountlvl = #{
+		mountlvl },useNumber = #{ useNumber },Proficiency=#{Proficiency}, 
+		sid3 = #{sid3 }
+		WHERE mid =
+		#{ mid }
+	</update>
+
+	<insert id="insertMount" parameterType="org.come.entity.Mount">
+		insert into
+		mount(MID,
+		MOUNTID,
+		MOUNTNAME,
+		MOUNTLVL,
+		LIVE,
+		SPRI,
+		POWER,
+		BONE,
+		EXP,
+		ROLEID)
+		values(#{mid},#{mountid},#{mountname},#{mountlvl},#{live},#{spri},#{power},#{bone},#{exp},#{roleid})
+	</insert>
+	
+	
+	
+	
+	<resultMap type="org.come.entity.MountRoleUser" id="mountRoleUser">
+		<result column="MID" property="mid"/>
+		<result column="MOUNTID" property="mountid"/>
+		<result column="MOUNTNAME" property="mountname"/>
+		<result column="MOUNTLVL" property="mountlvl"/>
+		<result column="LIVE" property="live"/>
+		<result column="SPRI" property="spri"/>
+		<result column="POWER" property="power"/>
+		<result column="BONE" property="bone"/>
+		<result column="EXP" property="exp"/>
+		<result column="ROLEID" property="roleid"/>
+		<result column="SID" property="sid"/>
+		<result column="OTHRERSID" property="othrersid"/>
+		<result column="USENUMBER" property="usenumber"/>
+		<result column="PROFICIENCY" property="proficiency"/>
+		<result column="SID3" property="sid3"/>
+		<result column="ROLENAME" property="rolename"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="USERNAME" property="username"/>
+	</resultMap>
+	
+	<select id="selectMount" resultMap="mountRoleUser">
+		SELECT * FROM 
+		(
+		    SELECT A.* , ROWNUM RN  from 
+		    ( 
+		    	SELECT MOUNTNAME,MOUNTLVL,LIVE,SPRI,BONE,EXP,USENUMBER,PROFICIENCY,ROLENAME,
+		    	SID,OTHRERSID,SID3 FROM MOUNT_ROLE_USERTABLE 
+		    	<where>
+		    		<if test="mru.mountname != null and mru.mountname != '' ">
+		    			AND MOUNTNAME LIKE CONCAT( '%' , CONCAT( #{mru.mountname} , '%' ))
+		    		</if>
+		    		<if test="mru.rolename != null and mru.rolename != '' ">
+		    			AND ROLENAME LIKE CONCAT( '%' , CONCAT( #{mru.rolename} , '%' ))
+		    		</if>
+		    	</where>
+		    	${mru.orderBy} 
+		    ) A  
+		    WHERE ROWNUM &lt; #{mru.end} 
+		) 
+		WHERE RN &gt;= #{mru.start} 
+	</select>
+	
+	<select id="selectMountCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (
+			SELECT MOUNTNAME,MOUNTLVL,LIVE,SPRI,BONE,EXP,USENUMBER,PROFICIENCY,ROLENAME,
+		    SID,OTHRERSID,SID3 FROM MOUNT_ROLE_USERTABLE 
+		    <where>
+		    	<if test="mru.mountname != null and mru.mountname != '' ">
+		    		AND MOUNTNAME LIKE CONCAT( '%' , CONCAT( #{mru.mountname} , '%' ))
+		    	</if>
+		    	<if test="mru.rolename != null and mru.rolename != '' ">
+		    		AND ROLENAME LIKE CONCAT( '%' , CONCAT( #{mru.rolename} , '%' ))
+		    	</if>
+		    </where>
+		)
+	</select>
+	
+	<!-- HGC-2020-01-20 -->
+	<!-- 批量删除 -->
+	<delete id="deleteMountsByMidList" parameterType="java.util.List">
+		delete from
+		mount
+		where mid in
+		<foreach collection="list" close=")" item="mid" open="("
+			separator=",">
+			#{mid}
+		</foreach>
+	</delete>
+
+	<!-- 批量添加 -->
+	<insert id="insertMountList" parameterType="java.util.List">
+		insert into
+		mount(MID, MOUNTID, MOUNTNAME, MOUNTLVL, LIVE, SPRI, POWER,
+		BONE, EXP, ROLEID,
+		SID, OTHRERSID, USENUMBER, PROFICIENCY, SID3)
+		<foreach collection="list" item="item" separator="union all">
+			select
+			#{item.item.mid},#{item.mountid},#{item.mountname},#{item.mountlvl},#{item.live},
+			#{item.spri},#{item.power},#{item.bone},#{item.exp},#{item.roleid},#{item.sid},#{item.othrersid},
+			#{item.useNumber},#{item.Proficiency},#{item.sid3} form dual
+		</foreach>
+	</insert>
+
+	<!-- 修改坐骑信息 -->
+	<update id="updateMountList" parameterType="java.util.List">
+		UPDATE mount
+		<trim prefix="set" prefixOverrides=",">
+			<trim prefix="mountname =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.mountname}
+				</foreach>
+			</trim>
+			<trim prefix="spri =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.spri}
+				</foreach>
+			</trim>
+			<trim prefix="power =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.power}
+				</foreach>
+			</trim>
+			<trim prefix="bone =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.bone}
+				</foreach>
+			</trim>
+			<trim prefix="live =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.live}
+				</foreach>
+			</trim>
+			<trim prefix="exp =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.exp}
+				</foreach>
+			</trim>
+			<trim prefix="sid =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.sid}
+				</foreach>
+			</trim>
+			<trim prefix="othrersid =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.othrersid}
+				</foreach>
+			</trim>
+			<trim prefix="mountlvl =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.mountlvl}
+				</foreach>
+			</trim>
+			<trim prefix="useNumber =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.useNumber}
+				</foreach>
+			</trim>
+			<trim prefix="Proficiency =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.Proficiency}
+				</foreach>
+			</trim>
+			<trim prefix="sid3 =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when mid = #{item.mid} then
+					#{item.sid3}
+				</foreach>
+			</trim>
+		</trim>
+		WHERE
+		<foreach collection="list" item="item" separator="or">
+			mid=#{item.mid}
+		</foreach>
+	</update>
+	<!-- 单条插入 -->
+	<insert id="insertMountSingle" parameterType="org.come.entity.Mount">
+		insert into
+		mount(MID, MOUNTID, MOUNTNAME, MOUNTLVL, LIVE, SPRI, POWER,
+		BONE, EXP,
+		ROLEID,
+		SID, OTHRERSID, USENUMBER, PROFICIENCY, SID3)
+		values(#{mid},#{mountid},#{mountname},#{mountlvl},#{live},
+		#{spri},#{power},#{bone},#{exp},#{roleid},#{sid},#{othrersid},
+		#{useNumber},#{Proficiency},#{sid3})
+	</insert>
+
+</mapper>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.GoodsrecordMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.Goodsrecord" >
+    <id column="GRID" property="grid" jdbcType="DECIMAL" />
+    <result column="RECORDTYPE" property="recordtype" jdbcType="DECIMAL" />
+    <result column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+    <result column="OTHERROLE" property="otherrole" jdbcType="DECIMAL" />
+    <result column="GOODS" property="goods" jdbcType="VARCHAR" />
+    <result column="RECORDTIME" property="recordtime" jdbcType="TIMESTAMP" />
+    <result column="GOODSNUM" property="goodsnum" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    GRID, RECORDTYPE, ROLEID, OTHERROLE, GOODS, RECORDTIME, GOODSNUM
+  </sql>
+  
+  <!-- 查询物品记录 -->
+  <select id="selectGoodsRecord" resultType="org.come.entity.Goodsrecord" parameterType="org.come.entity.Goodsrecord" >
+  	select * from goodsrecord_view
+  	<where>
+  	  <if test="recordtype != null" >
+        and RECORDTYPE = #{recordtype,jdbcType=DECIMAL}
+      </if>
+      <if test="roleid != null" >
+        and ROLEID = #{roleid,jdbcType=DECIMAL}
+      </if>
+      <if test="otherrole != null" >
+        and OTHERROLE = #{otherrole,jdbcType=DECIMAL}
+      </if>
+      <if test="goods != null" >
+        and GOODS = #{goods,jdbcType=VARCHAR}
+      </if>
+      <if test="recordtime != null" >
+        and to_char(RECORDTIME,'yyyy-mm-dd') = to_char(#{recordtime,jdbcType=TIMESTAMP},'yyyy-mm-dd')
+      </if>
+      <if test="goodsnum != null" >
+        and GOODSNUM = #{goodsnum,jdbcType=DECIMAL}
+      </if>
+      <if test="rolename != null" >
+        and rolename like '%'|| #{rolename,jdbcType=DECIMAL}||'%'
+      </if>
+      <if test="othername != null" >
+        and othername like '%'||#{othername,jdbcType=DECIMAL}||'%'
+      </if>
+  	</where>
+  </select>
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.come.entity.GoodsrecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from GOODSRECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from GOODSRECORD
+    where GRID = #{grid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from GOODSRECORD
+    where GRID = #{grid,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.come.entity.GoodsrecordExample" >
+    delete from GOODSRECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.Goodsrecord" >
+    insert into GOODSRECORD (GRID, RECORDTYPE, ROLEID, 
+      OTHERROLE, GOODS, RECORDTIME, 
+      GOODSNUM)
+    values (seq_goodsrecord_id.nextval, #{recordtype,jdbcType=DECIMAL}, #{roleid,jdbcType=DECIMAL}, 
+      #{otherrole,jdbcType=DECIMAL}, #{goods,jdbcType=VARCHAR}, #{recordtime,jdbcType=TIMESTAMP}, 
+      #{goodsnum,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.Goodsrecord" >
+    insert into GOODSRECORD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="grid != null" >
+        GRID,
+      </if>
+      <if test="recordtype != null" >
+        RECORDTYPE,
+      </if>
+      <if test="roleid != null" >
+        ROLEID,
+      </if>
+      <if test="otherrole != null" >
+        OTHERROLE,
+      </if>
+      <if test="goods != null" >
+        GOODS,
+      </if>
+      <if test="recordtime != null" >
+        RECORDTIME,
+      </if>
+      <if test="goodsnum != null" >
+        GOODSNUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="grid != null" >
+        #{grid,jdbcType=DECIMAL},
+      </if>
+      <if test="recordtype != null" >
+        #{recordtype,jdbcType=DECIMAL},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="otherrole != null" >
+        #{otherrole,jdbcType=DECIMAL},
+      </if>
+      <if test="goods != null" >
+        #{goods,jdbcType=VARCHAR},
+      </if>
+      <if test="recordtime != null" >
+        #{recordtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsnum != null" >
+        #{goodsnum,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.come.entity.GoodsrecordExample" resultType="java.lang.Integer" >
+    select count(*) from GOODSRECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update GOODSRECORD
+    <set >
+      <if test="record.grid != null" >
+        GRID = #{record.grid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recordtype != null" >
+        RECORDTYPE = #{record.recordtype,jdbcType=DECIMAL},
+      </if>
+      <if test="record.roleid != null" >
+        ROLEID = #{record.roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.otherrole != null" >
+        OTHERROLE = #{record.otherrole,jdbcType=DECIMAL},
+      </if>
+      <if test="record.goods != null" >
+        GOODS = #{record.goods,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recordtime != null" >
+        RECORDTIME = #{record.recordtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.goodsnum != null" >
+        GOODSNUM = #{record.goodsnum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update GOODSRECORD
+    set GRID = #{record.grid,jdbcType=DECIMAL},
+      RECORDTYPE = #{record.recordtype,jdbcType=DECIMAL},
+      ROLEID = #{record.roleid,jdbcType=DECIMAL},
+      OTHERROLE = #{record.otherrole,jdbcType=DECIMAL},
+      GOODS = #{record.goods,jdbcType=VARCHAR},
+      RECORDTIME = #{record.recordtime,jdbcType=TIMESTAMP},
+      GOODSNUM = #{record.goodsnum,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Goodsrecord" >
+    update GOODSRECORD
+    <set >
+      <if test="recordtype != null" >
+        RECORDTYPE = #{recordtype,jdbcType=DECIMAL},
+      </if>
+      <if test="roleid != null" >
+        ROLEID = #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="otherrole != null" >
+        OTHERROLE = #{otherrole,jdbcType=DECIMAL},
+      </if>
+      <if test="goods != null" >
+        GOODS = #{goods,jdbcType=VARCHAR},
+      </if>
+      <if test="recordtime != null" >
+        RECORDTIME = #{recordtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsnum != null" >
+        GOODSNUM = #{goodsnum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where GRID = #{grid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.Goodsrecord" >
+    update GOODSRECORD
+    set RECORDTYPE = #{recordtype,jdbcType=DECIMAL},
+      ROLEID = #{roleid,jdbcType=DECIMAL},
+      OTHERROLE = #{otherrole,jdbcType=DECIMAL},
+      GOODS = #{goods,jdbcType=VARCHAR},
+      RECORDTIME = #{recordtime,jdbcType=TIMESTAMP},
+      GOODSNUM = #{goodsnum,jdbcType=DECIMAL}
+    where GRID = #{grid,jdbcType=DECIMAL}
+  </update>
+</mapper>

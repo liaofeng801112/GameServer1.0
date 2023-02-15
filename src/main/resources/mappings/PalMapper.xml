@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.PalMapper">
+
+   <!-- 查找所有伙伴 -->
+	<select id="selectAllPal" resultType="org.come.entity.Pal">
+		select * from ROLE_PAL
+	</select>
+	<!-- 查找角色所有伙伴 -->
+	<select id="selectPalByRoleID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Pal">
+		select * from ROLE_PAL where roleid = #{ roleid }
+	</select>
+	<!-- 删除伙伴 -->
+	<delete id="deletePal" parameterType="java.math.BigDecimal">
+		delete from ROLE_PAL where id=#{id}
+	</delete>
+	<!-- 修改伙伴属性 -->
+	<update id="updatePal" parameterType="org.come.entity.Pal">
+		UPDATE ROLE_PAL SET
+		grow=#{grow},
+		lvl=#{lvl},
+		exp=#{exp},
+		parts=#{parts}
+		WHERE id=#{ id }
+	</update>
+	<!-- 添加伙伴 -->
+	<insert id="insertPal" parameterType="org.come.entity.Pal">
+		insert into ROLE_PAL (ID,PID,GROW,LVL,EXP,PARTS,ROLEID) values(#{id},#{pId},#{grow},#{lvl},#{exp},#{parts},#{roleId})
+	</insert>	
+	
+	<!-- HGC-2020-01-20 -->
+	<!-- 批量删除伙伴 -->
+	<delete id="deletePalList" parameterType="java.util.List">
+		delete from ROLE_PAL where id in
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 批量添加伙伴 -->
+	<insert id="insertPalList" parameterType="java.util.List">
+		insert into ROLE_PAL
+		(ID,PID,GROW,LVL,EXP,PARTS,ROLEID)
+		<foreach collection="list" item="item" separator="union all">
+			select
+			#{item.id},#{item.pId},#{item.grow},#{item.lvl},#{item.exp},
+			#{item.parts},#{item.roleId}
+			form dual
+		</foreach>
+	</insert>
+	<!-- 修改伙伴属性 -->
+	<update id="updatePalList" parameterType="java.util.List">
+		UPDATE ROLE_PAL
+		<trim prefix="set" prefixOverrides=",">
+			<trim prefix="grow =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when id = #{item.id} then
+					#{item.grow}
+				</foreach>
+			</trim>
+			<trim prefix="lvl =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when id = #{item.id} then
+					#{item.lvl}
+				</foreach>
+			</trim>
+			<trim prefix="exp =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when id = #{item.id} then
+					#{item.exp}
+				</foreach>
+			</trim>
+			<trim prefix="parts =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when id = #{item.id} then
+					#{item.parts}
+				</foreach>
+			</trim>
+		</trim>
+		WHERE
+		<foreach collection="list" item="item" separator="or">
+			id=#{item.id}
+		</foreach>
+	</update>
+	
+</mapper>

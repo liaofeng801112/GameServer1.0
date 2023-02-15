@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.MountskillMapper">
+
+
+	<select id="selectMountskillsByMountid" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.MountSkill">
+		select * from mount_skill where mid = #{ mid }
+	</select>
+
+	<delete id="deleteMountskills" parameterType="java.math.BigDecimal">
+		delete from
+		mount_skill where mid = #{ mid }
+	</delete>
+
+	<insert id="insertMountskills" parameterType="org.come.entity.MountSkill">
+		insert into
+		mount_skill(SKILLID,
+		SKILLNAME,
+		MID)
+		values(seq_mountskill_id.nextval,#{skillname},#{mid})
+	</insert>
+
+</mapper>

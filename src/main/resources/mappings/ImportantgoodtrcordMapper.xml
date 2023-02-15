@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.ImportantgoodtrcordMapper">
+
+
+	<!--重要物资汇总条件搜索 -->
+	<select id="selectImportantgoodsrecordList" resultType="org.come.bean.ImportantgoodssumrecordBean">
+    select imrd.GID,imlu.GOODSNAME NAME ,imrd.DATETIME TIME,SUM(imrd.GOODNUMBER) SUM
+		from
+		IMPORTANTGOODSSUMRECORD imrd join IMPORTANTGOODSLU imlu on
+		imlu.GID =
+		imrd.GID
+		<where>
+			<if test="time != null and time != '' ">
+				and to_date(imrd.datetime,'yyyy-mm-dd
+				hh24:mi:ss') &gt;=
+				to_date(#{time},'yyyy-mm-dd
+				hh24:mi:ss')-3 and
+				to_date(imrd.datetime,'yyyy-mm-dd
+				hh24:mi:ss') &lt;=
+				to_date(#{time},'yyyy-mm-dd
+				hh24:mi:ss')+3
+			</if>
+			<if test="weekendsum != null and weekendsum!=''">
+	and to_char(to_date(imrd.datetime,'yyyy-mm-dd
+	hh24:mi:ss'),'w') = #{weekendsum} and TO_CHAR(to_date(imrd.datetime,'yyyy-mm-dd
+	hh24:mi:ss'),'MM') = TO_CHAR(SYSDATE, 'MM')
+			</if>
+		</where>
+		group by imrd.GID,imlu.GOODSNAME,imrd.DATETIME order by imrd.DATETIME
+	</select>
+	<!-- 重要物资汇总对应物品搜索 -->
+	<select id="selectImportantgoodsrecordGoods" resultType="org.come.bean.ImportantgoodssumrecordBean">
+		select
+		TO_CHAR(mon.moneyday,'MM/DD') TIME , SUM(NVL(imrd.GOODNUMBER,0)) SUM from (SELECT
+		(TRUNC(SYSDATE,'MM') + ROWNUM - 1 ) as moneyday FROM DUAL CONNECT BY
+		ROWNUM &lt;=
+		TO_NUMBER(TO_CHAR(LAST_DAY(SYSDATE), 'dd'))) mon
+		left join
+		IMPORTANTGOODSSUMRECORD imrd on
+		to_DATE(imrd.datetime,'yyyy-mm-dd') =
+		mon.moneyday
+		where imrd.GID = #{goodsid}
+		group by mon.moneyday,imrd.gid
+		order by mon.moneyday
+
+	</select>
+
+	<!-- 监控物资设置条件搜索 -->
+	<select id="selectImportantGoodsLuList" resultType="org.come.entity.ImportantgoodsluEntity">
+		select ID,GID,GOODSNAME,VALUE,DATETIME from IMPORTANTGOODSLU
+		<where>
+			<if test="goodsid != null and goodsid != '' ">
+				and GID = #{goodsid}
+			</if>
+			<if test="goodsname != null and goodsname != '' ">
+				and GOODSNAME =#{goodsname}
+			</if>
+		</where>
+	</select>
+
+	<!-- 监控物资设置修改 -->
+	<update id="updateImportantGoodsLu" parameterType="org.come.entity.ImportantgoodsluEntity">
+		update IMPORTANTGOODSLU
+		<set>
+			<if test="gid != null and gid != ''">
+				GID = #{gid},
+			</if>
+			<if test="goodsname != null and goodsname != ''">
+				GOODSNAME = #{goodsname},
+			</if>
+			DATETIME = TO_CHAR(SYSDATE,'YYYY-MM-DD'),
+			<if test="value != null and value != ''">
+				VALUE = #{value},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<!-- 监控物资设置新增 -->
+	<insert id="addImportantGoodsLu" parameterType="org.come.entity.ImportantgoodsluEntity">
+		
+		insert into IMPORTANTGOODSLU
+		(
+		ID,GID,GOODSNAME,VALUE,DATETIME
+		)
+		values
+		(
+		SEQ_IMPORTANTGOODSLU_ID.NEXTVAL,#{gid},#{goodsname},#{value},TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	<!-- 监控物资设置删除 -->
+	<delete id="deleteImportantGoodsLu" parameterType="org.come.entity.ImportantgoodsluEntity">
+		delete from
+		IMPORTANTGOODSLU where ID = #{id}
+	</delete>
+
+	<!-- 类型设置条件搜索 -->
+	<select id="selectBuyTypeList" resultType="org.come.entity.BuytypeEntity">
+		select TID,BUYTYPE,TYPENAME,TIME from BUYTYPE
+		<where>
+			<if test="typename != null and typename != ''">
+				and TYPENAME = #{typename}
+			</if>
+			<if test="type != null and type != '' ">
+				and BUYTYPE = #{type}
+			</if>
+		</where>
+	</select>
+
+	<!-- 类型设置修改 -->
+	<update id="updateBuyType" parameterType="org.come.entity.BuytypeEntity">
+		update BUYTYPE
+		<set>
+			BUYTYPE = #{buytype},
+			<if test="typename != null">
+				TYPENAME = #{typename},
+			</if>
+			<if test="time != null">
+				TIME = #{time},
+			</if>
+		</set>
+		where TID = #{tid}
+	</update>
+	<!-- 类型设置删除 -->
+	<delete id="deleteBuyType" parameterType="org.come.entity.BuytypeEntity">
+		delete BUYTYPE where
+		TID = #{tid}
+	</delete>
+	<!-- 类型设置新增 -->
+	<insert id="addBuyType" parameterType="org.come.entity.BuytypeEntity">
+		<selectKey keyProperty="tid" order="BEFORE" resultType="java.math.BigDecimal">
+			select SEQ_BUYTYPE_ID.NEXTVAL from dual
+		</selectKey>
+		insert into BUYTYPE(
+		TID,BUYTYPE,TYPENAME,TIME
+		) values(
+		#{tid},#{buytype},#{typename},TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	
+
+	<!-- 重要物资/数据记录添加 -->
+	<insert id="addImportantrecordGoods" keyProperty="org.come.entity.ImportantrecordgoodsEntity">
+		<selectKey order="BEFORE" keyProperty="iid" resultType="java.math.BigDecimal">
+			select SEQ_IMPORTANTRECORDGOODS_ID.NEXTVAL from dual
+		</selectKey>
+		insert into IMPORTANTRECORDGOODS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="">
+				IID,
+			</if>
+			<if test="">
+				GOODSID,
+			</if>
+			<if test="">
+				GOODSNUMBER,
+			</if>
+			<if test="">
+				ROCORDTYPE,
+			</if>
+			<if test="">
+				USERID,
+			</if>
+			<if test="">
+				ROLEID,
+			</if>
+			<if test="">
+				SID,
+			</if>
+			DATETIME,
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="iid != null and iid != '' ">
+				#{iid},
+			</if>
+			<if test="goodsid != null and goodsid != '' ">
+				#{goodsid},
+			</if>
+			<if test="goodsnumber != null and goodsnumber != '' ">
+				#{goodsnumber},
+			</if>
+			<if test="rocordtype != null and rocordtype != '' ">
+				#{rocordtype},
+			</if>
+			<if test="userid != null and userid != '' ">
+				#{userid},
+			</if>
+			<if test="roleid != null and roleid != '' ">
+				#{roleid},
+			</if>
+			<if test="sid != null and sid != '' ">
+				#{sid},
+			</if>
+			TO_CHAR(SYSDATE,'YYYY-MM-DD'),
+		</trim>
+	</insert>
+	<!-- HGC-2019-12-01 -->
+	<!-- 搜索重要物资记录数量 -->
+	<select id="selectImportantGoods" resultType="org.come.entity.ImportantgoodssumrecordEntity">
+		select im.GID GID,go.SID SID,
+		SUM(NVL(go.GOODNUMBER,0)) GOODNUMBER from
+		IMPORTANTGOODSLU im join GOODSBUYRECORD
+		go on go.GID = im.GID where
+		TO_DATE(go.RECORDTIME,'YYYY-MM-DD') &gt;=
+		TRUNC(SYSDATE-1)
+		and
+		TO_DATE(go.RECORDTIME,'YYYY-MM-DD') &lt;
+		TRUNC(SYSDATE) GROUP BY im.GID ,go.SID
+	</select>
+	<insert id="addImporatantGoodsSum" parameterType="org.come.entity.ImportantgoodssumrecordEntity">
+		<selectKey order="BEFORE" resultType="java.math.BigDecimal"
+			keyProperty="id">
+			select SEQ_IMPORTANTGOODSSUMRECORD_ID.NEXTVAL from dual
+		</selectKey>
+		insert into IMPORTANTGOODSSUMRECORD (
+		ID,GID,GOODNUMBER,DATETIME,SID
+		)
+		values(
+		#{id},#{gid},#{goodnumber},TO_CHAR(SYSDATE,'YYYY-MM-DD'),#{sid}
+		)
+	</insert>
+	<!-- HGC-2019-12-06 -->
+	<!-- 拼接字符串 -->
+	<update id="addImporatantGoodsLuTableSpace" parameterType="java.lang.String">
+		${time}
+	</update>
+	<!-- HGC-2019-12-19 -->
+	<!-- 拼接字符串 -->
+	<update id="addTableImporatantGoodsLuTableSpace" parameterType="java.lang.String">
+		${time}
+	</update>
+	
+	<select id="selectTableSapce" parameterType="java.lang.String" resultType="int">
+		select COUNT(*) from dba_tablespaces where tablespace_name = #{tableSpaceName}
+	</select>
+	<select id="selectTablePartition" resultType="int">
+		SELECT COUNT(*)
+		FROM USER_TAB_PARTITIONS where TABLE_NAME = #{tableName} and PARTITION_NAME=#{partitionName} 
+	</select>
+</mapper>

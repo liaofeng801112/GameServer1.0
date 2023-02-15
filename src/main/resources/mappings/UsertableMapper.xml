@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.UsertableMapper">
+
+	<sql id="LOGINRESULT_LIST">
+		BONE,
+		SPIR,
+		POWER,
+		SPEED,
+		GANGNAME,
+		PASSWORD,
+		SAVEGOLD,
+		GANGPOST,
+		CONTRIBUTION,
+		ACHIEVEMENT,
+		NEWROLE,
+		RESISTANCE,
+		BORN,
+		TASKDAILY,
+		UPTIME,
+		TIMINGGOOD,
+		TURNAROUND,
+		MARRYOBJECT,
+		SKILLS,
+		CAPTAIN,
+		LOCALNAME,
+		SEX,
+		RACE_NAME,
+		USER_ID,
+		X,
+		Y,
+		MAPID,
+		USERNAME,
+		USERPWD,
+		SPECIES_ID,
+		GANG_ID,
+		BOOTH_ID,
+		CODECARD,
+		EXPERIENCE,
+		GOLD,
+		GRADE,
+		HP,
+		MOUNT_ID,
+		MP,
+		PKRECORD,
+		PRESTIGE,
+		RACE_ID,
+		ROLE_ID,
+		ROLENAME,
+		SUMMONING_ID,
+		TITLE,
+		TROOP_ID,
+		PATH,
+		SERVERMESTRING,
+		taskComplete,
+		taskData,FIGHTING,DBEXP,SCORE,KILL,babyId,MONEY,DRAWING,SKILL_ID,CALM,
+		FMSLD,
+		XIUWEI,
+		EXTRAPOINT,
+		Paysum,Daypaysum,Dayandpayorno,Dayfirstinorno,Daygetorno,Vipget,lowOrHihtpack
+	</sql>
+
+	<sql id="USERTABLE_LIST">
+		USER_ID,
+		USERNAME,
+		USERPWD,
+		ACTIVITY,
+		VIP,
+		FRIENT_ID,
+		SAFETY,
+		IDCARD,
+		CODECARD,
+		MONEY,QID,usermoney,USERLASTLOGIN,phonenumber,phonetime,LOGINIP,REGISTERIP,FLAG
+	</sql>
+
+	<!-- 根据条件查找账号信息 -->
+	<select id="selectLogintableByCondition" resultType="org.come.bean.LoginResult"
+		parameterType="org.come.bean.LoginResult">
+		select userName,rolename,ACTIVITY from logintable
+		<where>
+			<if test="rolename != null">
+				and rolename like '%'||#{rolename}||'%'
+			</if>
+			<if test="userName != null">
+				and username like '%'||#{userName}||'%'
+			</if>
+			<if test="activity != null">
+				and activity = #{activity}
+			</if>
+		</where>
+	</select>
+
+	<!-- 搜索角色视图获得所有角色信息 -->
+	<select id="findAllUserRoles" resultType="org.come.bean.LoginResult">
+		SELECT
+		<include refid="LOGINRESULT_LIST" />
+		FROM LOGINTABLE
+	</select>
+
+	<!-- 获得所有用户信息 -->
+	<select id="findAllUser" resultType="org.come.entity.UserTable">
+		SELECT * FROM USERTABLE
+	</select>
+
+
+	<!-- 根据用户名和密码搜索角色视图获得角色信息 -->
+	<select id="findRoleByUserNameAndPassword" parameterType="String"
+		resultType="org.come.bean.LoginResult">
+		SELECT
+		<include refid="LOGINRESULT_LIST" />
+		FROM LOGINTABLE WHERE USERNAME=#{ userName }
+		<if test="null!=userPwd and ''!=userPwd">
+			and USERPWD = #{ userPwd }
+		</if>
+		<if test="null != serverMeString and '' != serverMeString">
+			and serverMeString = #{serverMeString}
+		</if>
+	</select>
+	<!-- 根据用户名和密码搜索用户表 -->
+	<select id="findUserByUserNameAndUserPassword" parameterType="String"
+		resultType="org.come.entity.UserTable">
+		SELECT *
+		FROM USERTABLE WHERE USERNAME=#{ username }
+		<if test="null!=userpwd and ''!=userpwd">
+			and USERPWD = #{ userpwd } and activity =0
+		</if>
+	</select>
+
+	<!-- 注册用户 -->
+	<insert id="insertIntoUser" parameterType="org.come.entity.UserTable">
+	<!-- 	<selectKey keyProperty="user_id" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select seq_usertable_id.nextval from dual
+		</selectKey> -->
+		insert into usertable(
+		USER_ID,
+		USERNAME,
+		USERPWD,
+		SAFETY,
+		IDCARD,QID,Userregidtsertime,registerip,phonenumber,flag)
+		values(#{user_id},#{username},#{userpwd},#{safety},#{idcard},#{qid},
+		#{Userregidtsertime},#{registerip},#{phonenumber},#{flag})
+	</insert>
+	
+	<!-- 三端 新增接口 通过手机号获取账号 -->
+	<select id="findUserByPhoneNum" resultType="org.come.entity.UserTable">
+		SELECT * FROM USERTABLE WHERE PHONENUMBER = #{phonenum} 
+	</select>
+
+	<!-- 修改用户信息 -->
+	<update id="updateUser" parameterType="org.come.entity.UserTable">
+		UPDATE usertable
+		<set>
+			<if test="codecard != null">
+				CODECARD = #{codecard},
+			</if>
+			<if test="money != null">
+				MONEY =#{ money },
+			</if>
+			<if test="activity != null">
+				activity = #{activity},
+			</if>
+			<if test="safety != null">
+				safety = #{safety},
+			</if>
+			<if test="userpwd != null">
+				userpwd = #{userpwd},
+			</if>
+			<if test="usermoney != null">
+				usermoney = #{usermoney},
+			</if>
+			<if test="USERLASTLOGIN != null">
+				USERLASTLOGIN = #{USERLASTLOGIN},
+			</if>
+			<if test="payintegration != null and payintegration != 0">
+				payintegration = #{payintegration},
+			</if>
+			<if test="loginip != null">
+				loginip = #{loginip},
+			</if>
+			<if test="phonenumber != null ">phonenumber = #{phonenumber}, </if>
+
+			<if test="phonetime != null and phonetime != ''">phonetime = #{phonetime}, </if>
+		</set>
+		WHERE USERNAME=#{username }
+	</update>
+	<select id="selectForUsername" parameterType="string"
+		resultType="org.come.entity.UserTable">
+
+		select * from usertable WHERE USERNAME=#{username }
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.UserTable">
+		select
+		<include refid="USERTABLE_LIST" />
+		from USERTABLE
+		where USER_ID = #{userId}
+	</select>
+	<select id="selectByCondition" parameterType="string"
+		resultType="org.come.entity.RoleTable">
+		select r.rolename,r.user_id,r.role_id
+		from USERTABLE u,role_table r
+		where u.QID = #{ qid } and u.USER_ID = r.USER_ID
+		<if test="rolename != null">
+			and r.rolename like '%'|| #{rolename} ||'%'
+		</if>
+	</select>
+	<!-- 查询所有玩家数目（用来进行玩家接口管理的） -->
+	<select id="selectSumForRoleUserHaterNumber" resultType="int"
+		parameterType="org.come.entity.RoleTable">
+		select count(*) from role_useter_hater
+		<where>
+			<if test="activity != null">
+				and activity like CONCAT(CONCAT('%', #{activity}), '%')
+			</if>
+			<if test="unknown != null">
+				and unknown like CONCAT(CONCAT('%', #{unknown}), '%')
+			</if>
+			<if test="rolename != null">
+				and rolename like CONCAT(CONCAT('%', #{rolename}), '%')
+			</if>
+			<if test="qid != null">
+				and qid like CONCAT(CONCAT('%', #{qid}), '%')
+			</if>
+			<if test="localname != null">
+				and localname like CONCAT(CONCAT('%', #{localname}), '%')
+			</if>
+			<if test="role_id != null">
+				and role_id = #{role_id}
+			</if>
+
+		</where>
+	</select>
+
+	<!-- 按照条件查询所有的信息 （用来进行玩家接口管理的） -->
+	<select id="selectSumForRoleUserHaterList" parameterType="org.come.entity.RoleTable"
+		resultType="org.come.entity.RoleTable">
+		select * from( select ROWNUM AS rowno, a.* from (
+		select * FROM
+		role_useter_hater t
+		<where>
+			<if test="activity != null">
+				and activity like CONCAT(CONCAT('%', #{activity}), '%')
+			</if>
+			<if test="unknown != null">
+				and unknown like CONCAT(CONCAT('%', #{unknown}), '%')
+			</if>
+			<if test="rolename != null">
+				and rolename like CONCAT(CONCAT('%', #{rolename}), '%')
+			</if>
+			<if test="qid != null">
+				and qid like CONCAT(CONCAT('%', #{qid}), '%')
+			</if>
+			<if test="localname != null">
+				and localname like CONCAT(CONCAT('%', #{localname}), '%')
+			</if>
+			<if test="role_id != null">
+				and role_id = #{role_id}
+			</if>
+		</where>
+		${userString}) a where ROWNUM &lt;= #{end}
+		)table_alias WHERE
+		table_alias.rowno &gt; #{start}
+
+	</select>
+	<!-- zeng-190711修改 -->
+	<!-- zeng-190712修改 -->
+	<!-- 按照条件查询用户表总的个数 -->
+	<select id="selectUsterTableForConcition" parameterType="org.come.entity.UserTable"
+		resultType="int">
+		select count(*) from usertable
+		<where>
+			<if test="activity != null">
+				and activity like CONCAT(CONCAT('%', #{activity}), '%')
+			</if>
+			<if test="username != null">
+				and username like CONCAT(CONCAT('%', #{username}), '%')
+			</if>
+			<if test="userpwd != null and userpwd != '' ">
+				and USERPWD = #{userpwd}
+			</if>
+			<if test="safety != null and safety != '' ">
+				and SAFETY = #{safety}
+			</if>
+			<if test="loginip != '' and registerip != '' and loginip != null and registerip != null">
+				and LOGINIP = #{loginip} or REGISTERIP = #{registerip}
+			</if>
+			<if test="USERLASTLOGIN != null and USERLASTLOGIN != '' ">
+				and USERLASTLOGIN >= #{USERLASTLOGIN}
+			</if>
+		</where>
+	</select>
+
+	<!-- 按照条件查询符合条件的所有List -->
+	<!-- zeng-190711修改 -->
+	<!-- zeng-190712修改 -->
+	<select id="selectForConditionForUsertable" parameterType="org.come.entity.UserTable"
+		resultType="org.come.entity.UserTable">
+		select * from( select ROWNUM AS rowno, a.* from (
+		select * FROM
+		usertable t
+		<where>
+			<if test="activity != null">
+				and activity like CONCAT(CONCAT('%', #{activity}), '%')
+			</if>
+			<if test="username != null">
+				and username like CONCAT(CONCAT('%', #{username}), '%')
+			</if>
+			<if test="userpwd != null and userpwd != '' ">
+				and USERPWD = #{userpwd}
+			</if>
+			<if test="safety != null and safety != '' ">
+				and SAFETY = #{safety}
+			</if>
+			<if test="loginip != '' and registerip != '' ">
+				and LOGINIP = #{loginip} or REGISTERIP = #{registerip}
+			</if>
+			<if test="phonenumber != '' and phonenumber != '' ">
+				and PHONENUMBER = #{phonenumber}
+			</if>
+		</where>
+		${useString} ) a where ROWNUM &lt;= #{end}
+		)table_alias WHERE
+		table_alias.rowno &gt; #{start}
+	</select>
+
+	<!-- 依据用户ID进行修改安全码 -->
+	<update id="updateUsterWithUid" parameterType="org.come.entity.UserTable">
+
+		update usertable
+		set safety=#{safety} where user_id=#{user_id}
+	</update>
+	<!-- 依据用户ID进行修改密码 -->
+	<update id="updateUsterWithUidforuserpasswd" parameterType="org.come.entity.UserTable">
+
+		update usertable set userpwd=#{userpwd} where user_id=#{user_id}
+	</update>
+
+	<!-- zeng-190711 -->
+	<delete id="delectUsertableForUsername" parameterType="java.lang.String">
+		delete
+		usertable WHERE USERNAME = #{username}
+	</delete>
+
+	<delete id="deleteRoletableForUid" parameterType="java.math.BigDecimal">
+		delete
+		role_table where user_id = #{user_id}
+	</delete>
+	<!-- 查询是否存在ip -->
+	<select id="selectFromIpaddressmac" parameterType="string"
+		resultType="org.come.entity.Ipaddressmac">
+
+		select * from Ipaddressmac where ADDRESSKEY=#{ip}
+	</select>
+	<!-- 插入ip -->
+	<insert id="insertFromIpaddressmac" parameterType="string">
+
+		insert into
+		Ipaddressmac
+		values(Address_Id.nextval,#{ip},to_char(sysdate,'YYYY-MM-DD
+		HH24:MI:SS'))
+	</insert>
+	<!-- 删除ip -->
+	<delete id="deleteFromIpaddressmac" parameterType="string">
+		delete from
+		Ipaddressmac where ADDRESSKEY=#{ip}
+	</delete>
+
+	<!-- 查询用户底下的所有角色 -->
+	<select id="selectAllRoleTable" parameterType="string"
+		resultType="org.come.entity.RoleTable">select r.role_id,r.rolename from usertable u join
+		role_table r on (u.user_id = r.user_id) where u.username = #{userName}
+	</select>
+
+	<!-- 迁移某个角色到另外一个用户 -->
+	<update id="roleChangeUser">update role_table set user_id = #{user_id},password =
+		'12345678' where role_id =#{roleId}
+	</update>
+
+	<!-- 查询仙玉总量 -->
+	<select id="selectAllCodecard" resultType="long"> SELECT sum(codecard)
+		FROM usertable
+	</select>
+	<!-- 查询积分总量 -->
+	<select id="selectAllPayintegration" resultType="long">SELECT
+		sum(payintegration) FROM usertable
+	</select>
+	<!-- 查询金钱总量 -->
+	<select id="selectAllGold" resultType="long">SELECT sum(gold) FROM
+		role_table
+	</select>
+	<!-- HGC-2019-11-15 start -->
+	<!-- 查询绑定某个手机号的绑定账号个数 -->
+	<select id="selectPhoneNumberSum" parameterType="string"
+		resultType="int">
+		select COUNT(phonenumber) from usertable where phonenumber
+		= #{phonenumber}
+	</select>
+	<!-- HGC-2019-11-19 -->
+	<!-- 账号充值明细条件搜索 -->
+	<select id="selectAccountRechargeList" resultType="org.come.entity.UserxyandroledhbcrEntity">
+		select
+		uscr.userid,uscr.ID,uscr.username,uscr.XSUM,uscr.XDSUM,uscr.TIME
+		from
+		USERXYANDROLEDHBCR uscr
+		<where>
+			<if test="time != null and time != '' ">and to_date(uscr.time,'yyyy-mm-ddhh24:mi:ss')
+				&gt;=to_date(#{time},'yyyy-mm-ddhh24:mi:ss')-3
+				and
+				to_date(uscr.time,'yyyy-mm-ddhh24:mi:ss')
+				&lt;=to_date(#{time},'yyyy-mm-ddhh24:mi:ss')+3 </if>
+			<if test="weekendsum != null and weekendsum != '' ">and
+				to_char(to_date(uscr.TIME,'yyyy-mm-ddhh24:mi:ss'),'w')
+				=#{weekendsum} and TO_CHAR(to_date(uscr.TIME,'yyyy-mm-dd
+				hh24:mi:ss'),'MM') =TO_CHAR(SYSDATE, 'MM')
+			</if>
+			<if test="username != null and username != '' ">and uscr.username = #{username} </if>
+		</where>
+		order by uscr.TIME
+	</select>
+	<!-- 账户充值明细查询充值/消耗走势 -->
+	<select id="selectAccountRechargeUser" resultType="org.come.entity.UserxyandroledhbcrEntity">
+		select
+		XSUM,XDSUM,TIME
+		from USERXYANDROLEDHBCR where
+		TO_DATE(TIME,'YYYY-MM-DDHH24:MI:SS')
+		&gt;=trunc(SYSDATE,'MM') and
+		TO_DATE(TIME,'YYYY-MM-DDHH24:MI:SS')
+		&lt;=SYSDATE and USERID =
+		#{userid}
+	</select>
+
+	<!-- HGC-2019-12-01 -->
+	<!-- 查询玩家/角色大话币仙玉操作记录 -->
+	<select id="selectUserRoleXianyuDahuabiList" resultType="org.come.entity.UserxyandroledhbcrEntity">
+		select
+		top.userid , top.username , top.roleid , top.rolename , top.codecard
+		xnow , top.xdsum ,top.sssum, top.gold dsum , bot.xsum from (
+		select *
+		from ( select ro.rolename , us.username , us.codecard , ro.gold ,
+		gs.*
+		from (
+		select * from ( select userid,roleid,
+		SUM(NVL(decode(buytype,1,numbermoney),
+		0) ) as sssum
+		,SUM(NVL(decode(buytype,2,numbermoney) , 0)) as xdsum
+		from
+		goodsbuyrecord where
+		TO_DATE(RECORDTIME,'YYYY-MM-DD') &gt;=
+		TRUNC(SYSDATE-1)
+		and
+		TO_DATE(RECORDTIME,'YYYY-MM-DD') &lt;
+		TRUNC(SYSDATE) group BY userid , roleid ) ) gs
+		inner join usertable us
+		on gs.userid = us.user_id inner join role_table ro
+		on ro.role_id =
+		gs.roleid ) ) top inner join
+		( select * from (
+		select us.user_id , sum(
+		nvl( ro.paysum * 100 , 0 ) ) xsum from (
+		select * from ( select USERID
+		from goodsbuyrecord GROUP by USERID ) ) gsus
+		inner join
+		usertable us on
+		us.user_id = gsus.userid inner join role_table ro on ro.user_id
+		=
+		us.user_id GROUP by us.user_id ) ) bot
+		on bot.user_id = top.userid
+	</select>
+	<!-- 添加玩家/角色大话币仙玉消耗统计 -->
+	<insert id="addUserRoleXianyuDahuabi" parameterType="org.come.entity.UserxyandroledhbcrEntity">
+		insert into
+		userxyandroledhbcr (ID ,USERID ,USERNAME
+		,ROLEID ,ROLENAME ,TYPE ,XSUM
+		,XDSUM ,
+		DSUM ,SSSUM ,TIME ,SID ,XNOW )
+		values
+		(SEQ_USERXYANDROLEDHBCR_ID.nextval ,
+		#{userid} , #{username} ,
+		#{roleid} , #{rolename} , #{type} , #{xsum} , #{xdsum} , #{dsum} ,
+		#{sssum} , TO_CHAR(sysdate,'YYYY-MM-DD') , #{sid} , #{xnow})
+	</insert>
+
+	<!-- HGC-2019-12-03 -->
+	<!-- 添加封号记录 -->
+	<insert id="addRufenghaoControl">
+		insert into rufenghaocontrol
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,username,
+			<if test="roleName!=null and roleName!= '' ">rolename,</if>
+			reason,type,registerip,lasstloginip,controlobject,dailiid,totalsum,datetime,quid
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			SEQ_RUFENGHAOCONTROL_ID.NEXTVAL,#{userTable.username},
+			<if test="roleName!=null and roleName!= '' ">#{roleName},</if>
+			#{reason}
+			,#{type},#{userTable.registerip},#{userTable.loginip},#{controlname},#{userTable.qid},#{userTable.payintegration},TO_CHAR(SYSDATE,'YYYY-MM-DD'),#{userTable.qid}
+		</trim>
+	</insert>
+
+	<!-- 搜索所有的封号记录 -->
+	<select id="selectRufenghaoControlList" resultType="org.come.entity.Rufenghaocontrol">
+		select * from RUFENGHAOCONTROL
+		<where>
+			<if test="type != null and type !='' ">
+				<if test=" type == '其他' ">
+					and reason != '广告'
+					and reason != '刷子'
+					and reason !=
+					'盗号'
+					and reason != '扰乱正常游戏秩序'
+				</if>
+				<if test=" type != '其他' and type != '全部' ">
+					and reason = #{type}
+				</if>
+			</if>
+			<if test=" time != null and time != '' ">
+				and TO_DATE(datetime,'YYYY-MM-DD') =
+				TO_DATE(#{time},'YYYY-MM-DD')
+			</if>
+			<if test="userName != null and userName != '' ">
+				and username = #{userName}
+			</if>
+			<if test="roleName != null and roleName != '' ">
+				and ROLENAME = #{roleName}
+			</if>
+			and type = 1
+		</where>
+		<if test="sort == 1">
+			order by username
+		</if>
+		<if test="sort == 2">
+			order by rolename
+		</if>
+		<if test="sort == 3">
+			order by registerip
+		</if>
+		<if test="sort == 4">
+			order by lasstloginip
+		</if>
+	</select>
+	
+	<delete id="deleteFenghaoRecord">
+		delete RUFENGHAOCONTROL where id = #{id}
+	</delete>
+	
+		<!-- HGC-2019-12-05 -->
+	<!-- 查询所有的总消耗与总充值 -->
+	<select id="selectRechargeConsumeSum" resultType="org.come.entity.UserxyandroledhbcrEntity">
+		select TIME,
+		SUM(NVL(XSUM,0)) XSUM,SUM(NVL(XDSUM,0)) XDSUM,SUM(NVL(DSUM,0))
+		DSUM,SUM(NVL(SSSUM,0)) SSSUM from userxyandroledhbcr where
+		TO_DATE(TIME,'YYYY-MM-DD') &gt;= TO_DATE(#{time},'YYYY-MM-DD')-3 and 
+		TO_DATE(TIME,'YYYY-MM-DD') &lt;= TO_DATE(#{time},'YYYY-MM-DD')+3 group
+		by TIME
+		order by TIME
+	</select>
+	<!-- 查询当前总消耗与总充值之和 -->
+	<select id="selectRechargeConsumeNowSum" resultType="org.come.entity.UserxyandroledhbcrEntity">
+		select
+		SUM(NVL(XSUM,0)) XSUM,SUM(NVL(XDSUM,0))
+		XDSUM,SUM(NVL(DSUM,0))
+		DSUM,SUM(NVL(SSSUM,0)) SSSUM from
+		userxyandroledhbcr
+	</select>
+   <!-- 查询最大ID-->
+   <select id="selectUserMax" resultType="java.math.BigDecimal">
+		select max(USER_ID) from usertable
+   </select>
+   <!-- 修改用户信息 -->
+	<update id="updateUnSeal">
+        UPDATE usertable SET activity=0 WHERE activity=1 AND username = #{username}  
+    </update>
+    
+    <!-- zrikka 2020 0427 -->
+    <!-- 查询账号是否绑定 -->
+    <select id="selectByFlag" resultType="org.come.entity.UserTable">
+    	select * from usertable where flag = #{flag} 
+    </select>
+    
+    <!-- 绑定时查询账号是否存在 -->
+    <select id="selectByBinding" resultType="org.come.entity.UserTable">
+    	select * from usertable where username = #{username} and USERPWD = #{userpasw} and SAFETY = #{safety} 
+    </select>
+    
+    <!-- 绑定账号 -->
+    <update id="updateByBinding">
+    	update usertable set 
+    	username = #{userTable.username} ,
+    	USERPWD = #{userTable.userpwd} ,
+    	SAFETY = #{userTable.safety} , 
+    	flag = #{userTable.flag} where USER_ID = #{userTable.user_id}     	
+    </update>
+    
+    <!-- 根据userid查询 账号标识 -->
+    <select id="selectUserFlagById" resultType="java.lang.String">
+    	select flag from usertable where USER_ID = #{userid}
+    </select>
+    <!--  -->
+</mapper>

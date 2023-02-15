@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.GangMapper">
+
+	<!-- 根据帮派ID查找帮派 -->
+	<select id="findRoleGangByGangID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Gang">
+		SELECT GANGID,
+		GANGNAME,
+		GANGNUMBER,
+		BUILDER,
+		GANGGRADE,
+		FOUNDER,
+		GANGBELONG,
+		PROPERTY,
+		INTRODUCTION,GANGTXT FROM GANG WHERE GANGID = #{ gangid }
+	</select>
+
+	<!-- 根据帮派名字查找帮派 -->
+	<select id="findGangByGangName" parameterType="String"
+		resultType="org.come.entity.Gang">
+		SELECT GANGID,
+		GANGNAME,
+		GANGNUMBER,
+		BUILDER,
+		GANGGRADE,
+		FOUNDER,
+		GANGBELONG,
+		PROPERTY,
+		INTRODUCTION,GANGTXT FROM GANG WHERE GANGNAME = #{ gangname }
+	</select>
+
+	<!-- 查找所有帮派 -->
+	<select id="findAllGang" resultType="org.come.entity.Gang">
+		SELECT GANGID,
+		GANGNAME,
+		GANGNUMBER,
+		BUILDER,
+		GANGGRADE,
+		FOUNDER,
+		GANGBELONG,
+		PROPERTY,
+		INTRODUCTION,GANGTXT FROM GANG
+	</select>
+
+	<!-- 创建帮派 -->
+	<insert id="createGang" parameterType="org.come.entity.Gang">
+	    <selectKey keyProperty="gangid" resultType="java.math.BigDecimal" order="BEFORE">
+			select seq_gang_id.nextval from dual
+		</selectKey>
+	    insert into
+		GANG(GANGID,GANGNAME,GANGNUMBER,BUILDER,PROPERTY,GANGGRADE,FOUNDER,GANGBELONG,INTRODUCTION)
+		values(#{gangid},#{gangname},1,0,1,0,#{founder},#{gangbelong},#{introduction})
+	</insert>
+
+	<!-- 修改帮派 -->
+	<insert id="updateGang" parameterType="org.come.entity.Gang">
+		update GANG set 
+		gangnumber = #{ gangnumber },
+		builder = #{ builder },
+		ganggrade = #{ ganggrade },
+		gangbelong = #{gangbelong},
+		property = #{property},
+		introduction = #{introduction},
+		GANGTXT = #{gangTxt}
+		where gangid = #{ gangid }
+	</insert>
+</mapper>

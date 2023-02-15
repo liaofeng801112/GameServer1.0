@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.OpenareatableMapper">
+	<!-- 三端 -->
+	<resultMap type="org.come.entity.Openareatable" id="openareatable">
+		<result property="tb_id" column="TB_ID" />
+		<result property="ot_areaid" column="OT_AREAID" />
+		<result property="ot_areaname" column="OT_AREANAME" />
+		<result property="ot_belong" column="OT_BELONG" />
+		<result property="ot_distribution" column="OT_DISTRIBUTION" />
+		<result property="ot_atid" column="OT_ATID" />
+		<result property="ot_cretime" column="OT_CRETIME" />
+		<result property="ot_ctremanageid" column="OT_CTREMANAGEID" />
+		<result property="ot_upatemanageid" column="OT_UPATEMANAGEID" />
+		<result property="ot_updatetime" column="OT_UPDATETIME" />
+		<result property="ot_memo" column="OT_MEMO" />
+	</resultMap>
+
+	<!-- 查 -->
+	<select id="selectAllOpenareatable" resultMap="openareatable">
+		select TB_ID ,OT_AREAID ,OT_AREANAME ,OT_BELONG ,OT_DISTRIBUTION ,OT_ATID ,
+		OT_CRETIME ,OT_CTREMANAGEID ,OT_UPATEMANAGEID ,OT_UPDATETIME ,OT_MEMO from openareatable
+	</select>
+	<!-- 增 -->
+	<insert id="insertOpenareatable" parameterType="org.come.entity.Openareatable" >
+		insert into openareatable ( TB_ID ,
+			<if test="ot_areaid != null">
+				OT_AREAID ,
+			</if>
+			<if test="ot_areaname != null">
+				OT_AREANAME ,
+			</if>
+			<if test="ot_belong != null">
+				OT_BELONG ,
+			</if>
+			<if test="ot_distribution != null">
+				OT_DISTRIBUTION ,
+			</if>
+			<if test="ot_atid != null">
+				OT_ATID ,
+			</if>	
+			<if test="ot_ctremanageid != null">
+				OT_CTREMANAGEID ,
+			</if>
+			<if test="ot_upatemanageid != null">
+				OT_UPATEMANAGEID ,
+			</if> 
+			<if test="ot_memo != null">
+				OT_MEMO ,
+			</if> 
+		 OT_CRETIME )
+		values ( seq_openareatable.nextval ,
+			<if test="ot_areaid != null">
+				#{ot_areaid} ,
+			</if>
+			<if test="ot_areaname != null">
+				#{ot_areaname} ,
+			</if>
+			<if test="ot_belong != null">
+				#{ot_belong} ,
+			</if>
+			<if test="ot_distribution != null">
+				#{ot_distribution} ,
+			</if>
+			<if test="ot_atid != null">
+				#{ot_atid} ,
+			</if>	
+			<if test="ot_ctremanageid != null">
+				#{ot_ctremanageid} ,
+			</if>
+			<if test="ot_upatemanageid != null">
+				#{ot_upatemanageid} ,
+			</if> 
+			<if test="ot_memo != null">
+				#{ot_memo} ,
+			</if> 
+		sysdate )
+	</insert>
+	<!-- 改 -->
+	<update id="updateOpenareatable" parameterType="org.come.entity.Openareatable">
+		update openareatable 
+		<set>
+			<if test="ot_areaid != null">
+				OT_AREAID = #{ot_areaid} ,
+			</if>
+			<if test="ot_areaname != null">
+				OT_AREANAME = #{ot_areaname} ,
+			</if>
+			<if test="ot_belong != null">
+				OT_BELONG = #{ot_belong} ,
+			</if>
+			<if test="ot_distribution != null">
+				OT_DISTRIBUTION = #{ot_distribution} ,
+			</if>
+			<if test="ot_atid != null">
+				OT_ATID = #{ot_atid} ,
+			</if>	
+			<if test="ot_ctremanageid != null">
+				OT_CTREMANAGEID = #{ot_ctremanageid} ,
+			</if>
+			<if test="ot_upatemanageid != null">
+				OT_UPATEMANAGEID = #{ot_upatemanageid} ,
+			</if> 
+			<if test="ot_memo != null">
+				OT_MEMO = #{ot_memo} ,
+			</if>
+			OT_UPDATETIME = sysdate 
+		</set>
+		where TB_ID = #{tb_id} 
+	</update>
+	<!-- 删 -->
+	<delete id="deleteOpenareatable" parameterType="java.math.BigDecimal">
+		delete openareatable where TB_ID = #{tb_id} 
+	</delete>
+	
+	<select id="selectTuijiNum" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+		select OT_AREAID from openareatable where OT_ATID = #{tuiji}
+	</select>
+	
+	<select id="selectAllArea" parameterType="java.math.BigDecimal" resultMap="openareatable">
+		select * from openareatable where ot_atid = 
+		( select ot_atid from openareatable where ot_areaid = 
+		( select qid from usertable where user_id = #{userid} ) )
+	</select>
+	
+	<select id="selectBelong" parameterType="java.lang.String" resultType="java.lang.String">
+		select ot_belong from openareatable where ot_areaid = #{qid} 
+	</select>
+	
+	<select id="selectAtid" parameterType="java.lang.String" resultType="java.lang.String">
+		select ot_atid from openareatable where ot_areaid = #{qid} 
+	</select>
+</mapper>	

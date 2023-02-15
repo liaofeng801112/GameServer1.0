@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.ExpensesReceiptsMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.ExpensesReceipts" >
+    <id column="ERID" property="erid" jdbcType="DECIMAL" />
+    <result column="PlayerAcc" property="playeracc" jdbcType="VARCHAR" />
+    <result column="Recharge" property="recharge" jdbcType="DECIMAL" />
+    <result column="PlayerPay" property="playerpay" jdbcType="DECIMAL" />
+    <result column="YuanBao" property="yuanbao" jdbcType="DECIMAL" />
+    <result column="paytime" property="paytime" jdbcType="TIMESTAMP" />
+    <result column="SID" property="sid" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ERID, PlayerAcc, Recharge, PlayerPay, YuanBao, paytime, SID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from EXPENSESRECEIPTS
+    where ERID = #{erid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from EXPENSESRECEIPTS
+    where ERID = #{erid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.ExpensesReceipts" >
+    insert into EXPENSESRECEIPTS (ERID, PLAYERACC, RECHARGE, 
+      PLAYERPAY, YUANBAO, PAYTIME, SID, TYPE,ROLEID,BUYROLENAME)
+    values (pay_increatement.nextval, #{playeracc,jdbcType=VARCHAR}, #{recharge,jdbcType=DECIMAL}, 
+      #{playerpay,jdbcType=DECIMAL}, #{yuanbao,jdbcType=DECIMAL}, #{paytime}, #{sid,jdbcType=DECIMAL},
+      #{type,jdbcType=DECIMAL},#{roleid,jdbcType=DECIMAL},#{buyroleName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.ExpensesReceipts" >
+    insert into EXPENSESRECEIPTS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="erid != null" >
+        ERID,
+      </if>
+      <if test="playeracc != null" >
+        PlayerAcc,
+      </if>
+      <if test="recharge != null" >
+        Recharge,
+      </if>
+      <if test="playerpay != null" >
+        PlayerPay,
+      </if>
+      <if test="yuanbao != null" >
+        YuanBao,
+      </if>
+      <if test="paytime != null" >
+        paytime,
+      </if>
+      <if test="sid != null" >
+        SID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="erid != null" >
+        #{erid,jdbcType=DECIMAL},
+      </if>
+      <if test="playeracc != null" >
+        #{playeracc,jdbcType=VARCHAR},
+      </if>
+      <if test="recharge != null" >
+        #{recharge,jdbcType=DECIMAL},
+      </if>
+      <if test="playerpay != null" >
+        #{playerpay,jdbcType=DECIMAL},
+      </if>
+      <if test="yuanbao != null" >
+        #{yuanbao,jdbcType=DECIMAL},
+      </if>
+      <if test="paytime != null" >
+        #{paytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.ExpensesReceipts" >
+    update EXPENSESRECEIPTS
+    <set >
+      <if test="playeracc != null" >
+        PlayerAcc = #{playeracc,jdbcType=VARCHAR},
+      </if>
+      <if test="recharge != null" >
+        Recharge = #{recharge,jdbcType=DECIMAL},
+      </if>
+      <if test="playerpay != null" >
+        PlayerPay = #{playerpay,jdbcType=DECIMAL},
+      </if>
+      <if test="yuanbao != null" >
+        YuanBao = #{yuanbao,jdbcType=DECIMAL},
+      </if>
+      <if test="paytime != null" >
+        paytime = #{paytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sid != null" >
+        SID = #{sid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ERID = #{erid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.ExpensesReceipts" >
+    update EXPENSESRECEIPTS
+    set PlayerAcc = #{playeracc,jdbcType=VARCHAR},
+      Recharge = #{recharge,jdbcType=DECIMAL},
+      PlayerPay = #{playerpay,jdbcType=DECIMAL},
+      YuanBao = #{yuanbao,jdbcType=DECIMAL},
+      paytime = #{paytime,jdbcType=TIMESTAMP},
+      SID = #{sid,jdbcType=DECIMAL}
+    where ERID = #{erid,jdbcType=DECIMAL}
+  </update>
+   <select id="selectTimeAll" resultMap="BaseResultMap" >
+    select * 
+    from EXPENSESRECEIPTS  
+    where 
+    PAYTIME &gt;= #{start,jdbcType=VARCHAR}
+    and
+    PAYTIME &lt;= #{end,jdbcType=VARCHAR}
+  </select>
+  
+
+<!-- 查询所有玩家数目（用来进行玩家接口管理的） -->
+	<select id="selectAllTotal" resultType="int"
+		parameterType="org.come.entity.ExpensesReceipts">
+		select count(*) FROM
+		EXPENSESRECEIPTS 
+		<where>
+			<if test="roleid != null and roleid != ''">
+				and roleid = #{roleid}
+			</if>
+			<if test="playeracc != null and playeracc != ''">
+				and playeracc like CONCAT(CONCAT('%', #{playeracc}), '%')
+			</if>
+			<if test="buyroleName != null and buyroleName != ''">
+				and buyroleName like CONCAT(CONCAT('%', #{buyroleName}), '%')
+			</if>
+			<if test="type != null and type != ''">
+				and type = #{type}
+			</if>
+		</where>
+	</select>
+	
+  <!-- 按照条件查询所有的信息 -->
+	<select id="selectAll" parameterType="org.come.entity.ExpensesReceipts"
+		resultMap="BaseResultMap">
+		select * FROM
+		EXPENSESRECEIPTS
+		<where>
+			<if test="roleid != null and roleid != ''">
+				and roleid = #{roleid}
+			</if>
+			<if test="playeracc != null and playeracc != ''">
+				and playeracc like CONCAT(CONCAT('%', #{playeracc}), '%')
+			</if>
+			<if test="buyroleName != null and buyroleName != ''">
+				and buyroleName like CONCAT(CONCAT('%', #{buyroleName}), '%')
+			</if>
+			<if test="type != null and type != ''">
+				and type = #{type}
+			</if>
+		</where>
+		order by paytime desc
+	</select>
+  
+  <select id="selectAllForAreaId"  parameterType="org.come.entity.ExpensesReceipts" resultType="org.come.entity.ExpensesReceipts">
+  
+  
+  SELECT * FROM (Select ROWNUM AS ROWNO, T.*   from expensesreceipts T
+
+     where  ROWNUM &lt;= (#{pageNumber}*10) and sid=#{sid}) TABLE_ALIAS WHERE TABLE_ALIAS.ROWNO  &gt;= ((#{pageNumber}-1)*10+1)
+  </select>
+
+  <select id="selectAllfyId"  resultType="int">
+  
+   select erid  from expensesreceipts 
+   where 
+   SID = #{sid,jdbcType=DECIMAL}
+   and 
+   PAYTIME &gt;= #{start,jdbcType=VARCHAR}
+   and
+   PAYTIME &lt;= #{end,jdbcType=VARCHAR}
+  </select>
+  <select id="selectChartForMoneth" parameterType="org.come.bean.OneAreaServiceMonthBean" resultType="org.come.bean.OneAreaServiceMonthBean">
+  
+         SELECT SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 1, B.RECHARGE, 0)) AS one,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 2, B.RECHARGE, 0)) AS two,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 3, B.RECHARGE, 0)) AS three,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 4, B.RECHARGE, 0)) AS four,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 5, B.RECHARGE, 0)) AS five,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 6, B.RECHARGE, 0)) AS six,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 7, B.RECHARGE, 0)) AS seven,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 8, B.RECHARGE, 0)) AS eight,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 9, B.RECHARGE, 0)) AS nine,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 10, B.RECHARGE, 0)) AS ten,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 11, B.RECHARGE, 0)) AS eleven,  
+           SUM(DECODE(EXTRACT(MONTH FROM B.PAYTIME), 12, B.RECHARGE, 0)) AS tweer  
+      FROM EXPENSESRECEIPTS B  
+     WHERE SID =#{sid}
+       AND EXTRACT(YEAR FROM B.PAYTIME) = #{year} 
+  
+  </select>
+  
+  <select id="selectChartForDayWithSid" parameterType="org.come.bean.DayForOneAreaServiceMonthBean" resultType="org.come.bean.DayForOneAreaServiceMonthBean">
+  
+        SELECT SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 1, B.RECHARGE, 0)) AS one ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 2, B.RECHARGE, 0)) AS two ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 3, B.RECHARGE, 0)) AS three ,
+       SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 4, B.RECHARGE, 0)) AS four ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 5, B.RECHARGE, 0)) AS five ,
+     
+         SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 6, B.RECHARGE, 0)) AS six ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 7, B.RECHARGE, 0)) AS seven ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 8, B.RECHARGE, 0)) AS eight ,
+       SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 9, B.RECHARGE, 0)) AS nine ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 10, B.RECHARGE, 0)) AS ten ,
+     
+         SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 11, B.RECHARGE, 0)) AS elev ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 12, B.RECHARGE, 0)) AS tween ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 13, B.RECHARGE, 0)) AS thirteen ,
+       SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 14, B.RECHARGE, 0)) AS fourteen ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 15, B.RECHARGE, 0)) AS fivteen ,
+     
+         SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 16, B.RECHARGE, 0)) AS sixteen ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 17, B.RECHARGE, 0)) AS seventeen ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 18, B.RECHARGE, 0)) AS eightteen ,
+       SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 19, B.RECHARGE, 0)) AS nineteen ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 20, B.RECHARGE, 0)) AS tweity ,
+     
+         SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 21, B.RECHARGE, 0)) AS twyone ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 22, B.RECHARGE, 0)) AS twytwo ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 23, B.RECHARGE, 0)) AS twythree ,
+       SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 24, B.RECHARGE, 0)) AS twyfour ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME),25, B.RECHARGE, 0)) AS twyfive ,
+     
+         SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 26, B.RECHARGE, 0)) AS twysix ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 27, B.RECHARGE, 0)) AS twyseven ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 28, B.RECHARGE, 0)) AS twyeight ,
+       SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 29, B.RECHARGE, 0)) AS twynine ,
+      SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 30, B.RECHARGE, 0)) AS thirty ,
+     
+         SUM(DECODE(EXTRACT(day FROM B.PAYTIME), 31, B.RECHARGE, 0)) AS thyone 
+
+      FROM EXPENSESRECEIPTS B  
+     WHERE SID =#{sid}
+       AND EXTRACT(month FROM B.PAYTIME) = #{month}
+  
+  </select>
+</mapper>

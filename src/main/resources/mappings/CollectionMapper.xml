@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.CollectionMapper">
+	<resultMap id="BaseResultMap" type="org.come.entity.Collection">
+		<id column="COLID" property="colid" jdbcType="DECIMAL" />
+		<result column="SALEID" property="saleid" jdbcType="DECIMAL" />
+		<result column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		COLID, SALEID, ROLEID
+	</sql>
+	<!-- 查询用户的收藏列表 -->
+	<select id="selectRoleCollect" parameterType="java.math.BigDecimal" resultType="org.come.entity.Collection">
+		select
+		r.*,s.salename,s.saleskin,s.saleprice,s.saletype,s.otherid,s.uptime,s.buyrole
+		from collection r,Salegoods s
+		where r.saleid = s.saleid and r.ROLEID = #{roleid,jdbcType=DECIMAL}
+	</select>
+	<!-- 查询用户的收藏列表 -->
+	<select id="selectUserCollection"  resultType="java.math.BigDecimal"
+		parameterType="java.math.BigDecimal">
+		select saleid from collection where ROLEID = #{roleid}
+	
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="org.come.entity.CollectionExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from COLLECTION
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.math.BigDecimal">
+		select
+		<include refid="Base_Column_List" />
+		from COLLECTION
+		where COLID = #{colid,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+		delete from COLLECTION
+		where COLID = #{colid,jdbcType=DECIMAL}
+	</delete>
+	<delete id="deleteByExample" parameterType="org.come.entity.CollectionExample">
+		delete from COLLECTION
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="org.come.entity.Collection">
+		<selectKey keyProperty="colid" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select seq_collection_id.nextval from dual
+		</selectKey>
+		insert into COLLECTION (COLID, SALEID, ROLEID
+		)
+		values (#{colid,jdbcType=DECIMAL}, #{saleid,jdbcType=DECIMAL},
+		#{roleid,jdbcType=DECIMAL}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="org.come.entity.Collection">
+		insert into COLLECTION
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="colid != null">
+				COLID,
+			</if>
+			<if test="saleid != null">
+				SALEID,
+			</if>
+			<if test="roleid != null">
+				ROLEID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="colid != null">
+				#{colid,jdbcType=DECIMAL},
+			</if>
+			<if test="saleid != null">
+				#{saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="roleid != null">
+				#{roleid,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="org.come.entity.CollectionExample"
+		resultType="java.lang.Integer">
+		select count(*) from COLLECTION
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update COLLECTION
+		<set>
+			<if test="record.colid != null">
+				COLID = #{record.colid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.saleid != null">
+				SALEID = #{record.saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.roleid != null">
+				ROLEID = #{record.roleid,jdbcType=DECIMAL},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update COLLECTION
+		set COLID = #{record.colid,jdbcType=DECIMAL},
+		SALEID = #{record.saleid,jdbcType=DECIMAL},
+		ROLEID = #{record.roleid,jdbcType=DECIMAL}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Collection">
+		update COLLECTION
+		<set>
+			<if test="saleid != null">
+				SALEID = #{saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="roleid != null">
+				ROLEID = #{roleid,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where COLID = #{colid,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="org.come.entity.Collection">
+		update COLLECTION
+		set SALEID = #{saleid,jdbcType=DECIMAL},
+		ROLEID = #{roleid,jdbcType=DECIMAL}
+		where COLID = #{colid,jdbcType=DECIMAL}
+	</update>
+</mapper>

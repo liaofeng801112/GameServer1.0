@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.GoodstableMapper">
+	<sql id="GOODSTABLE_LIST">
+		GOODSID,
+		GOODSNAME,
+		SKIN,
+		TYPE,
+		QUALITY,
+		VALUE,
+		INSTRUCTION,
+		RGID,
+		ROLE_ID,
+		STATUS,
+		USETIME,goodlock,QHV,QHT
+	</sql>
+	<!-- HGC-2019-11-22 -->
+	<resultMap type="org.come.bean.Goodsbuyrecordsumbean" id="goodsbuyrecordsumbeanResultMap">
+		<result column="GID" property="gid" />
+		<result column="BUYSUM" property="salesum" />
+		<result column="GOODSNAME" property="goodsname" />
+		<result column="PAYSUM" property="salesumprice" />
+		<result column="GOODSPRICE" property="saleprice" />
+		<result column="DATETIME" property="datetime" />
+	</resultMap>
+	<resultMap type="org.come.entity.GoodssaledayrecordEntity"
+		id="GoodssaledayrecordEntityResultMap">
+		<result property="gid" column="GID" />
+		<result property="buysum" column="BUYSUM" />
+		<result property="paysum" column="PAYSUM" />
+	</resultMap>
+
+	<!-- 获取角色物品信息 -->
+	<select id="getGoodsByRoleID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Goodstable">
+		select
+		<include refid="GOODSTABLE_LIST" />
+		from goodstable where role_id = #{ role_id }
+		order by goodsid
+	</select>
+	<!-- 获取单个物品信息 -->
+	<select id="getGoodsByRgID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Goodstable">
+		select
+		<include refid="GOODSTABLE_LIST" />
+		from goodstable where rgid = #{ rgid }
+	</select>
+	<!-- 查询角色是否有该件物品且 物品在背包内 -->
+	<select id="selectGoodsByRoleIDAndGoodsID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Goodstable">
+		select
+		<include refid="GOODSTABLE_LIST" />
+		from goodstable where role_id = #{ roleid } and
+		goodsid = #{ goodsid }
+		and status=0 and usetime &gt; 0
+	</select>
+	<!-- 购买添加物品 -->
+	<insert id="insertGoods" parameterType="org.come.entity.Goodstable">
+		insert into
+		goodstable(GOODSID,GOODSNAME,SKIN,TYPE,QUALITY,VALUE,INSTRUCTION,RGID,ROLE_ID,USETIME,STATUS,goodlock,QHV,QHT)
+		values(#{goodsid},#{goodsname},#{skin},#{type},#{quality},
+		#{value},#{instruction},#{ rgid },#{role_id},
+		nvl(#{ usetime
+		},1),nvl(#{status},0),#{goodlock},#{qhv,jdbcType=NUMERIC},#{qht,jdbcType=NUMERIC})
+	</insert>
+	<insert id="insertGoodssqlS" parameterType="java.util.List">
+		insert into goodstable
+		(GOODSID,GOODSNAME,SKIN,TYPE,QUALITY,VALUE,INSTRUCTION,RGID,ROLE_ID,USETIME,STATUS,goodlock,QHV,QHT)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			select
+			#{item.goodsid},#{item.goodsname},#{item.skin},#{item.type},#{item.quality},
+			#{item.value},#{item.instruction},#{ item.rgid },#{item.role_id},
+			nvl(#{ item.usetime },1),nvl(#{item.status},0),#{item.goodlock},#{item.qhv,jdbcType=NUMERIC},#{item.qht,jdbcType=NUMERIC} from
+			dual
+		</foreach>
+	</insert>
+	<!-- 修改角色物品信息 -->
+	<update id="updateGoods" parameterType="org.come.entity.Goodstable">
+		UPDATE GOODSTABLE SET
+		GOODSID = #{ goodsid }, GOODSNAME = #{ goodsname },
+		SKIN = #{ skin
+		},TYPE = #{ type }, QUALITY = #{ quality },
+		VALUE = #{ value },
+		INSTRUCTION = #{ instruction },
+		ROLE_ID = #{ role_id }, STATUS = #{
+		status }, USETIME = #{ usetime
+		},goodlock=#{goodlock},QHV=#{qhv,jdbcType=NUMERIC},QHT=#{qht,jdbcType=NUMERIC}
+		WHERE RGID =#{
+		rgid }
+	</update>
+	<!-- 修改角色物品使用次数信息 -->
+	<update id="updateGoodsum">
+		UPDATE GOODSTABLE SET USETIME = #{ usetime } WHERE
+		RGID =#{ rgid }
+	</update>
+	<!-- 修改角色物品使用状态 -->
+	<update id="updateGoodstate">
+		UPDATE GOODSTABLE SET STATUS = #{ status } WHERE RGID
+		=#{ rgid }
+	</update>
+	<!-- 删除角色物品 -->
+	<delete id="deleteGoodsByRgid" parameterType="org.come.entity.Goodstable">
+		delete from
+		GOODSTABLE where RGID = #{ rgid }
+	</delete>
+	<!-- 查找最新表ID -->
+	<select id="selectMaxID" resultType="java.math.BigDecimal">
+		select max(RGID) from
+		goodstable
+	</select>
+	<!-- 获取所有角色物品信息 -->
+	<select id="getAllGoods" resultType="org.come.entity.Goodstable">
+		select
+		<include refid="GOODSTABLE_LIST" />
+		from goodstable
+		order by goodsid
+	</select>
+
+	<!-- HGC-2019-11-18 -->
+	<!-- HGC-2019-12-20修改 -->
+	<!-- 仙玉商品销售统计查询 -->
+	<select id="selectXianYuGoodsbuy" resultMap="goodsbuyrecordsumbeanResultMap">
+		SELECT DISTINCT ssr.GID,
+		ssr.BUYSUM,
+		ssr.PAYSUM ,
+		ssr.DATETIME,
+		gb.price
+		GOODSPRICE,
+		ssr.GOODSNAME
+		FROM sale_shopping_record ssr
+		JOIN
+		GOODSBUYRECORD gb
+		ON gb.GID = ssr.GID
+		<where>
+			<if test="time != null and time != '' ">
+				and ssr.datetime = #{time}
+			</if>
+			<if test="goodsname != null and goodsname != '' ">
+				and ssr.goodsname like
+				CONCAT('%',CONCAT(#{goodsname},'%'))
+			</if>
+			and gb.BUYTYPE = 2
+			AND TO_DATE(ssr.DATETIME,'yyyy-mm-dd') =
+			TO_DATE(gb.RECORDTIME,'yyyy-mm-dd')+1
+		</where>
+		<if test="type == 1">
+			order by ssr.buysum desc
+		</if>
+		<if test="type == 2">
+			order by ssr.buysum
+		</if>
+		<if test="type == 3">
+			order by ssr.paysum desc
+		</if>
+		<if test="type == 4">
+			order by ssr.paysum
+		</if>
+	</select>
+
+	<!-- 仙玉商品销售统计对应物品柱状图查询 -->
+	<select id="selectXianYuGoodsbuyZhuZhuangTu" resultMap="goodsbuyrecordsumbeanResultMap">
+		select
+		GID,BUYSUM,PAYSUM ,DATETIME, GOODSPRICE, GOODSNAME from
+		sale_shopping_record where to_char(to_date(DATETIME,'YYYY-MM-DD
+		HH24:mi:ss'),'MM') = to_char(SYSDATE,'MM') and GID = #{gid} order by
+		DATETIME
+	</select>
+
+	<!-- 售卖物品监控条件搜索 -->
+	<select id="selectShangChengShopList" resultType="org.come.entity.ShangchengshopEntity">
+		select GID,GOODSNAME,GOODTYPE,GOODSPRICE,SKIN,TEXT from SHANGCHENGSHOP
+		<where>
+			<if test="goodsid != null and goodsid != '' ">
+				and GID = #{goodsid}
+			</if>
+			<if test="goodsname != null and goodsname != ''">
+				and GOODSNAME = #{goodsname}
+			</if>
+		</where>
+	</select>
+
+	<!-- 售卖物品监控修改 -->
+	<update id="updateShangChengShop" parameterType="org.come.entity.ShangchengshopEntity">
+		update SHANGCHENGSHOP
+		<set>
+			<if test="goodsname!= null">
+				GOODSNAME = #{goodsname},
+			</if>
+			<if test="goodtype != null">
+				GOODTYPE = #{goodtype},
+			</if>
+			<if test="text != null">
+				TEXT = #{text},
+			</if>
+			<if test="skin != null">
+				SKIN = #{skin},
+			</if>
+			<if test="goodsprice != null">
+				GOODSPRICE = #{goodsprice},
+			</if>
+		</set>
+		where GID = #{gid}
+	</update>
+	<!-- 售卖物品监控删除 -->
+	<delete id="deleteShangChengShop" parameterType="org.come.entity.ShangchengshopEntity">
+		delete
+		SHANGCHENGSHOP where GID = #{gid}
+	</delete>
+
+	<!--售卖物品监控新增 -->
+	<insert id="addShangChengShop" parameterType="org.come.entity.ShangchengshopEntity">
+		insert into
+		SHANGCHENGSHOP(
+		GID,GOODSNAME,GOODTYPE,GOODSPRICE,SKIN,TEXT
+		) values (
+		#{gid},#{goodsname},#{goodtype},#{goodsprice},#{skin},#{text}
+		)
+	</insert>
+
+	<!-- 查询商城销售记录表的每个物品的销售总量与总消耗 -->
+	<select id="selectGoodsBuyRecordSumList" resultMap="GoodssaledayrecordEntityResultMap">
+		select
+		GID,SUM(GOODNUMBER) BUYSUM ,SUM(NUMBERMONEY) PAYSUM from
+		GOODSBUYRECORD
+		where TO_DATE(RECORDTIME,'YYYY-MM-DD') &gt;=
+		TRUNC(SYSDATE-1)
+		and TO_DATE(RECORDTIME,'YYYY-MM-DD') &lt;
+		TRUNC(SYSDATE) and BUYTYPE = 2 group by GID,BUYTYPE
+		
+	</select>
+	<insert id="addGoodssaledayrecord" parameterType="org.come.bean.Goodsbuyrecordsumbean">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.math.BigDecimal">
+			select SEQ_GOODSSALEDAYRECORD_ID.NEXTVAL from dual
+		</selectKey>
+		insert into GOODSSALEDAYRECORD
+		(
+		ID,GID,BUYSUM,PAYSUM,DATETIME
+		) values(
+		#{id},#{gid},#{buysum},#{paysum},TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+	<!-- 新增商城销售记录 zrikka -->
+	<insert id="addGoodsBuyRecord" parameterType="org.come.entity.GoodsbuyrecordEntity">
+		INSERT INTO
+		GOODSBUYRECORD
+		(BID ,GID ,PRICE ,BUYTYPE ,GOODNUMBER ,NUMBERMONEY
+		,RECORDTIME ,USERID
+		,ROLEID ,SID)
+		VALUES(SEQ_GOODSBUYRECORD_ID.NEXTVAL ,
+		#{gid} , #{price} , #{buytype} , #{goodnumber} ,
+		#{numbermoney} ,
+		TO_CHAR(SYSDATE,'yyyy-mm-dd hh24:mi:ss') , #{userid} , #{roleid} , #{sid} )
+	</insert>
+
+	<!-- HGC-2020-01-17 -->
+	<!-- 批量删除角色物品 -->
+	<delete id="deleteGoodsByRgids" parameterType="java.util.List">
+		delete from
+		GOODSTABLE where RGID in
+		<foreach collection="list" index="index" item="id" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 修改角色物品信息 -->
+	<update id="updateGoodsList" parameterType="java.util.List">
+		UPDATE GOODSTABLE
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="GOODSID =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.goodsid}
+				</foreach>
+			</trim>
+			<trim prefix="GOODSNAME =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.goodsname}
+				</foreach>
+			</trim>
+			<trim prefix="SKIN =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.skin}
+				</foreach>
+			</trim>
+			<trim prefix="TYPE =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.type}
+				</foreach>
+			</trim>
+			<trim prefix="QUALITY =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.quality}
+				</foreach>
+			</trim>
+			<trim prefix="VALUE =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.value}
+				</foreach>
+			</trim>
+			<trim prefix="INSTRUCTION =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.instruction}
+				</foreach>
+			</trim>
+			<trim prefix="ROLE_ID =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.role_id}
+				</foreach>
+			</trim>
+			<trim prefix="STATUS =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.status}
+				</foreach>
+			</trim>
+			<trim prefix="USETIME =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.usetime}
+				</foreach>
+			</trim>
+			<trim prefix="goodlock =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.goodlock}
+				</foreach>
+			</trim>
+			<trim prefix="QHV =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.qhv,jdbcType=NUMERIC}
+				</foreach>
+			</trim>
+			<trim prefix="QHT =case" suffix="end,">
+				<foreach collection="list" index="index" item="goodstable">
+					when
+					RGID=#{goodstable.rgid} then #{goodstable.qht,jdbcType=NUMERIC}
+				</foreach>
+			</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="goodstable"
+			index="index">
+			RGID=#{goodstable.rgid}
+		</foreach>
+	</update>
+
+</mapper>

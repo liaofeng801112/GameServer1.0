@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.8.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- PAYVIP -->
+<mapper namespace="org.come.mapper.PayvipBeanServerMapper">
+    <!-- 结果映射 -->
+    <resultMap id="payvipMap" type="org.come.entity.PayvipBean">
+        <result column="ID" property="id" jdbcType="INTEGER" />
+        <result column="PAYNUM" property="paynum" jdbcType="INTEGER" />
+        <result column="GIVEGOODS" property="givegoods" jdbcType="VARCHAR" />
+        <result column="GRADE" property="grade" jdbcType="INTEGER" />
+        <result column="INSTRUCTIONTEXT" property="instructiontext" jdbcType="VARCHAR" />
+        <result column="INCREATIONTEXT" property="increationtext" jdbcType="VARCHAR" />
+        <result column="DATETIME" property="datetime" jdbcType="VARCHAR" />
+        <result column="GETNUMBER" property="getnumber" jdbcType="INTEGER" />
+    </resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        ID, PAYNUM, GIVEGOODS, GRADE, INSTRUCTIONTEXT, INCREATIONTEXT, 
+        DATETIME, GETNUMBER
+    </sql>
+    <select id="selectAllVip" resultMap="payvipMap">
+    	select * from PAYVIP order by GRADE 
+  	</select>
+  	
+  	
+  	<delete id="deletePayvipBean" >
+    delete from PAYVIP where ID = #{id}
+  </delete>
+   
+   <insert id="insertPayvioBean" parameterType="org.come.entity.PayvipBean" >  
+    insert into PAYVIP (ID, PAYNUM , GIVEGOODS, GRADE , INSTRUCTIONTEXT,INCREATIONTEXT,DATETIME,GETNUMBER)
+    values (SEQ_PAYVIP_ID.nextval, #{paynum}, #{givegoods}, #{grade}, #{instructiontext}, #{increationtext}, #{datetime}, #{getnumber})
+  </insert>
+  
+  
+  <update id="updatePayvioBean" parameterType="org.come.entity.PayvipBean">
+		UPDATE PAYVIP SET
+      <if test="givegoods != null" >GIVEGOODS = #{ givegoods },
+      </if>
+      <if test="grade != null" > GRADE = #{ grade },
+      </if>
+      <if test="instructiontext != null" >INSTRUCTIONTEXT = #{ instructiontext },
+      </if>
+      <if test="increationtext != null" >INCREATIONTEXT = #{ increationtext },
+      </if>
+      <if test="datetime != null" >DATETIME = #{ datetime },
+      </if>
+      <if test="getnumber != null" >GETNUMBER = #{ getnumber },
+      </if>
+   	<if test="paynum != null" >	 PAYNUM = #{ paynum }
+      </if>
+	  WHERE ID =#{ id }
+	</update>
+  
+</mapper>

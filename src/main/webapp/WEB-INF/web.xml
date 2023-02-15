@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+    <display-name>GameServer</display-name>
+    <servlet>
+        <servlet-name>saveDB</servlet-name>
+        <servlet-class>org.come.servlet.SaveDBServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>saveDB</servlet-name>
+        <url-pattern>/manageService/saveDB</url-pattern>
+    </servlet-mapping>
+    <!-- 冒名顶替 -->
+    <servlet>
+
+
+
+
+
+        <servlet-name>userLoginControl</servlet-name>
+        <servlet-class>org.come.servlet.sale.UserLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userLoginControl</servlet-name>
+        <url-pattern>/user/login</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>manageServiceControl</servlet-name>
+        <servlet-class>org.come.servlet.ControlFromClientForMesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>manageServiceControl</servlet-name>
+        <url-pattern>/manageService/control</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ModifyInviteCode</servlet-name>
+        <servlet-class>org.come.pay.ModifyInviteCodeServlet</servlet-class>
+    </servlet>
+    <!-- 修改邀请码 -->
+    <servlet-mapping>
+        <servlet-name>ModifyInviteCode</servlet-name>
+        <url-pattern>/servlet/ModifyInviteCode</url-pattern>
+    </servlet-mapping>
+    <servlet>
+
+
+        <servlet-name>ModifyInviteName</servlet-name>
+        <servlet-class>org.come.pay.ModifyInviteNameServlet</servlet-class>
+    </servlet>
+    <!-- 修改大区名字 -->
+    <servlet-mapping>
+        <servlet-name>ModifyInviteName</servlet-name>
+        <url-pattern>/servlet/ModifyInviteName</url-pattern>
+    </servlet-mapping>
+    <servlet>
+
+        <servlet-name>CatAllUserRole</servlet-name>
+        <servlet-class>org.come.pay.CatAllUserRoleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CatAllUserRole</servlet-name>
+        <url-pattern>/servlet/CatAllUserRole</url-pattern>
+    </servlet-mapping>
+    <servlet>
+
+        <servlet-name>ModifyUserPwd</servlet-name>
+        <servlet-class>org.come.pay.ModifyUserPwdServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ModifyUserPwd</servlet-name>
+        <url-pattern>/servlet/ModifyUserPwd</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>checkCounterfeit</servlet-name>
+        <servlet-class>org.come.pay.check.CheckCounterfeit</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>checkCounterfeit</servlet-name>
+        <url-pattern>/servlet/checkCounterfeit</url-pattern>
+    </servlet-mapping>
+    <!-- 后台登陆 -->
+    <servlet>
+
+
+
+        <servlet-name>adminLoginControl</servlet-name>
+        <servlet-class>org.come.pay.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>adminLoginControl</servlet-name>
+        <url-pattern>/admin/login</url-pattern>
+    </servlet-mapping>
+    <servlet>
+
+        <servlet-name>checkClose</servlet-name>
+        <servlet-class>org.come.pay.check.CheckCloseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>checkClose</servlet-name>
+        <url-pattern>/servlet/checkClose</url-pattern>
+    </servlet-mapping>
+    <servlet>
+
+
+
+
+
+
+
+
+        <servlet-name>userInfoShow</servlet-name>
+        <servlet-class>org.come.servlet.UserInfoShowServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userInfoShow</servlet-name>
+        <url-pattern>/userInfo/show</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RoleTableChangePwdSererlet</servlet-name>
+        <url-pattern>/servlet/RoleTableChangePwdSererlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RoleTableChangePwdSererlet</servlet-name>
+        <servlet-class>org.come.servlet.RoleTableChangePwdSererlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>nimasiquanjiaServerlet</servlet-name>
+        <servlet-class>org.come.pay.nimasiquanjiaServerlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>nimasiquanjiaServerlet</servlet-name>
+        <url-pattern>/servlet/nimasiquanjiaServerlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>addGoodsControl</servlet-name>
+        <servlet-class>org.come.servlet.AddGoodsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addGoodsControl</servlet-name>
+        <url-pattern>/goods/add</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RoleInfo</servlet-name>
+        <servlet-class>org.come.servlet.RoleInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RoleInfo</servlet-name>
+        <url-pattern>/roleInfo/show</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>userInfo</servlet-name>
+        <servlet-class>org.come.servlet.UserInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userInfo</servlet-name>
+        <url-pattern>/userInfo/change</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Encodeing</servlet-name>
+        <servlet-class>cn.hncu.com.encode.Encodeing</servlet-class>
+        <init-param>
+            <param-name>charset</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.come.server.GameServer</listener-class>
+    </listener>
+    <welcome-file-list>
+        <welcome-file>xy2o.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet>
+        <servlet-name>GameServer.v6.0</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/springmvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GameServer.v6.0</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserTableServerlet</servlet-name>
+        <url-pattern>/servlet/UserTableServerlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserTableServerlet</servlet-name>
+        <servlet-class>org.come.servlet.UserTableServerlet</servlet-class>
+    </servlet>
+    <!--角色销售 -->
+    <servlet-mapping>
+        <servlet-name>rolesellServlet</servlet-name>
+        <url-pattern>/servlet/rolesell</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>rolesellServlet</servlet-name>
+        <servlet-class>org.come.servlet.sale.RolesellServlet</servlet-class>
+    </servlet>
+    <!-- 玩家信息查询 -->
+    <servlet-mapping>
+        <servlet-name>userRoleQueryServlet</servlet-name>
+        <url-pattern>/servlet/userRoleQuery</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>userRoleQueryServlet</servlet-name>
+        <servlet-class>org.come.servlet.UserRoleQueryServlet</servlet-class>
+    </servlet>
+
+    <!--账号信息获取 -->
+    <servlet-mapping>
+        <servlet-name>selectAccInfo</servlet-name>
+        <url-pattern>/servlet/selectAccInfo</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>selectAccInfo</servlet-name>
+        <servlet-class>org.come.servlet.SelectAccInfoServlet</servlet-class>
+    </servlet>
+
+
+    <!--自增:查询充值记录 -->
+    <servlet-mapping>
+        <servlet-name>selectRecord</servlet-name>
+        <url-pattern>/servlet/selectRecord</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>selectRecord</servlet-name>
+        <servlet-class>org.come.servlet.SelectRecordServlet</servlet-class>
+    </servlet>
+
+
+
+    <!--自增:查询兑换码记录 -->
+    <servlet-mapping>
+        <servlet-name>SelectGoodsexchangeServlet</servlet-name>
+        <url-pattern>/servlet/SelectGoodsexchangeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SelectGoodsexchangeServlet</servlet-name>
+        <servlet-class>org.come.servlet.SelectGoodsexchangeServlet</servlet-class>
+    </servlet>
+
+    <!--自增:恢复合区 -->
+    <servlet-mapping>
+        <servlet-name>recoveryMerge</servlet-name>
+        <url-pattern>/servlet/recoveryMerge</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>recoveryMerge</servlet-name>
+        <servlet-class>org.come.servlet.RecoveryMergeServlet</servlet-class>
+    </servlet>
+
+    <!--自增:区域查询 -->
+    <servlet-mapping>
+        <servlet-name>OpenAreaSelect</servlet-name>
+        <url-pattern>/servlet/OpenAreaSelect</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>OpenAreaSelect</servlet-name>
+        <servlet-class>org.come.servlet.OpenAreaServlet</servlet-class>
+    </servlet>
+
+    <!--自增:发布系统消息 -->
+    <servlet-mapping>
+        <servlet-name>sendSystemMessage</servlet-name>
+        <url-pattern>/servlet/sendSystemMessage</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>sendSystemMessage</servlet-name>
+        <servlet-class>org.come.servlet.SendSystemMessageServlet</servlet-class>
+    </servlet>
+
+
+    <!--自增:设置服务器状态：停机/运行  1.禁止新玩家登陆-->
+    <servlet-mapping>
+        <servlet-name>setServerRunStatus</servlet-name>
+        <url-pattern>/servlet/setServerRunStatus</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>setServerRunStatus</servlet-name>
+        <servlet-class>org.come.servlet.SetServerRunStatusServlet</servlet-class>
+    </servlet>
+    <!-- 自增:跨域filter -->
+    <filter>
+        <filter-name>cors</filter-name>
+        <filter-class>org.come.MyCorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>cors</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--自增:所有在线玩家全部下线  2.踢出所有在线玩家并备份在线玩家数据-->
+    <servlet-mapping>
+        <servlet-name>setPlayerOffLine</servlet-name>
+        <url-pattern>/servlet/setPlayerOffLine</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>setPlayerOffLine</servlet-name>
+        <servlet-class>org.come.servlet.SetPlayerOffLineServlet</servlet-class>
+    </servlet>
+
+    <!--自增:数据备份 3.开始备份数据-->
+    <servlet-mapping>
+        <servlet-name>dateBackUp</servlet-name>
+        <url-pattern>/servlet/dateBackUpServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dateBackUp</servlet-name>
+        <servlet-class>org.come.servlet.DateBackUpServlet</servlet-class>
+    </servlet>
+
+    <!--自增:数据备份 4.备份redis-->
+    <servlet-mapping>
+        <servlet-name>RedisBackUp</servlet-name>
+        <url-pattern>/servlet/RedisBackUp</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RedisBackUp</servlet-name>
+        <servlet-class>org.come.servlet.RedisBackUpServlet</servlet-class>
+    </servlet>
+
+    <!--自增:抽奖清理-->
+    <servlet-mapping>
+        <servlet-name>LaborClear</servlet-name>
+        <url-pattern>/servlet/LaborClear</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>LaborClear</servlet-name>
+        <servlet-class>org.come.servlet.LaborClearServlet</servlet-class>
+    </servlet>
+
+
+    <!--自增:服务器游戏数据手动保存-->
+    <servlet-mapping>
+        <servlet-name>SaveGameDataInfo</servlet-name>
+        <url-pattern>/servlet/saveGameDataInfo</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SaveGameDataInfo</servlet-name>
+        <servlet-class>org.come.servlet.SaveGameDataServlet</servlet-class>
+    </servlet>
+
+
+    <!--自增:礼包查询接口-->
+    <servlet-mapping>
+        <servlet-name>getChongjipackList</servlet-name>
+        <url-pattern>/servlet/getChongjipackList</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>getChongjipackList</servlet-name>
+        <servlet-class>org.come.servlet.ChongjipackListServlet</servlet-class>
+    </servlet>
+
+
+    <!--自增:活动礼包修改-->
+    <servlet-mapping>
+        <servlet-name>updateChongjipack</servlet-name>
+        <url-pattern>/servlet/updateChongjipack</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>updateChongjipack</servlet-name>
+        <servlet-class>org.come.servlet.UpdateChongjipackServlet</servlet-class>
+    </servlet>
+
+    <!--自增:VIP礼包修改-->
+    <servlet-mapping>
+        <servlet-name>vipPayOptionServlet</servlet-name>
+        <url-pattern>/servlet/vipPayOptionServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>vipPayOptionServlet</servlet-name>
+        <servlet-class>org.come.servlet.VipPayOptionServlet</servlet-class>
+    </servlet>
+</web-app>

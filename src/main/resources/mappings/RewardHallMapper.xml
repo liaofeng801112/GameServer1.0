@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.RewardHallMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.RewardHall" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="Goodstable" property="goodstable" jdbcType="VARCHAR" />
+    <result column="Goodnum" property="goodnum" jdbcType="DECIMAL" />
+    <result column="Goodprice" property="goodprice" jdbcType="DECIMAL" />
+    <result column="Role_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="ThrowTime" property="throwtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, Goodstable, Goodnum, Goodprice, Role_ID, ThrowTime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.come.entity.RewardHallExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from REWARD_HALL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from REWARD_HALL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from REWARD_HALL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.come.entity.RewardHallExample" >
+    delete from REWARD_HALL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.RewardHall" >
+  		<selectKey keyProperty="id" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select SEQ_REWARD_ID.nextval from dual
+		</selectKey>
+    insert into REWARD_HALL (ID, Goodstable, Goodnum, 
+      Goodprice, Role_ID, ThrowTime
+      )
+    values (#{id}, #{goodstable,jdbcType=VARCHAR}, #{goodnum,jdbcType=DECIMAL}, 
+      #{goodprice,jdbcType=DECIMAL}, #{roleId,jdbcType=DECIMAL}, #{throwtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.RewardHall" >
+    insert into REWARD_HALL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="goodstable != null" >
+        Goodstable,
+      </if>
+      <if test="goodnum != null" >
+        Goodnum,
+      </if>
+      <if test="goodprice != null" >
+        Goodprice,
+      </if>
+      <if test="roleId != null" >
+        Role_ID,
+      </if>
+      <if test="throwtime != null" >
+        ThrowTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="goodstable != null" >
+        #{goodstable,jdbcType=VARCHAR},
+      </if>
+      <if test="goodnum != null" >
+        #{goodnum,jdbcType=DECIMAL},
+      </if>
+      <if test="goodprice != null" >
+        #{goodprice,jdbcType=DECIMAL},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="throwtime != null" >
+        #{throwtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.come.entity.RewardHallExample" resultType="java.lang.Integer" >
+    select count(*) from REWARD_HALL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update REWARD_HALL
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.goodstable != null" >
+        Goodstable = #{record.goodstable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodnum != null" >
+        Goodnum = #{record.goodnum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.goodprice != null" >
+        Goodprice = #{record.goodprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.roleId != null" >
+        Role_ID = #{record.roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.throwtime != null" >
+        ThrowTime = #{record.throwtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update REWARD_HALL
+    set ID = #{record.id,jdbcType=DECIMAL},
+      Goodstable = #{record.goodstable,jdbcType=VARCHAR},
+      Goodnum = #{record.goodnum,jdbcType=DECIMAL},
+      Goodprice = #{record.goodprice,jdbcType=DECIMAL},
+      Role_ID = #{record.roleId,jdbcType=DECIMAL},
+      ThrowTime = #{record.throwtime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.RewardHall" >
+    update REWARD_HALL
+    <set >
+      <if test="goodstable != null" >
+        Goodstable = #{goodstable,jdbcType=VARCHAR},
+      </if>
+      <if test="goodnum != null" >
+        Goodnum = #{goodnum,jdbcType=DECIMAL},
+      </if>
+      <if test="goodprice != null" >
+        Goodprice = #{goodprice,jdbcType=DECIMAL},
+      </if>
+      <if test="roleId != null" >
+        Role_ID = #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="throwtime != null" >
+        ThrowTime = #{throwtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.RewardHall" >
+    update REWARD_HALL
+    set Goodstable = #{goodstable,jdbcType=VARCHAR},
+      Goodnum = #{goodnum,jdbcType=DECIMAL},
+      Goodprice = #{goodprice,jdbcType=DECIMAL},
+      Role_ID = #{roleId,jdbcType=DECIMAL},
+      ThrowTime = #{throwtime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

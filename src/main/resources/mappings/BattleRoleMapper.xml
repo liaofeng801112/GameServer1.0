@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.BattleRoleMapper">
+	<sql id="BattleRole_LIST">
+		ROLEID,
+		ROLENAME,
+		TEAMID,
+		PROPERTY,
+		PETPROPERTY,
+		BABYPROPERTY,
+		LINGBAOPROPERTY,
+		STARTTIME
+	</sql>
+	<!-- 查找某个用户的数据 -->
+	<select id="selectByRoleID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.BattleRole">
+		select
+		<include refid="BattleRole_LIST" />
+		from battlerole where roleid=#{ roleid }
+	</select>
+	
+	<!-- 查找某个队伍的数据 -->
+	<select id="selectByTeamID" parameterType="java.lang.Integer"
+		resultType="org.come.entity.BattleRole">
+		select
+		<include refid="BattleRole_LIST" />
+		from battlerole where teamid=#{ teamid }
+	</select>
+
+	<!-- 查找ids是否在此表中出现 -->
+	<select id="selectByRoleIDs"
+		resultType="java.lang.Integer" parameterType="java.util.List">
+		SELECT count(*) FROM battlerole where roleid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 删除一整队的数据 -->
+	<delete id="deleteByTeamID" parameterType="java.lang.Integer">
+		delete from battlerole
+		where teamid=#{ teamid }
+	</delete>
+
+	<!-- 添加一整队的数据 -->
+	<insert id="insert" parameterType="org.come.entity.BattleRole">
+		insert into battlerole
+		(roleid, rolename, teamid, property, petproperty, babyproperty, lingbaoproperty, starttime)
+		values (
+			#{ roleid }, 
+			#{ rolename },
+			#{ teamid },
+			#{ property },
+			#{ petproperty }, 
+			#{ babyproperty },
+			#{ lingbaoproperty },
+			#{ starttime }
+		)
+	</insert>
+
+</mapper>

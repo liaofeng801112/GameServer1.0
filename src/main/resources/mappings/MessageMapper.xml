@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.MessageMapper">
+	<resultMap id="BaseResultMap" type="org.come.entity.Message">
+		<id column="MESID" property="mesid" jdbcType="DECIMAL" />
+		<result column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+		<result column="SALEID" property="saleid" jdbcType="DECIMAL" />
+		<result column="MESCONTENT" property="mescontent" jdbcType="VARCHAR" />
+		<result column="GETTIME" property="gettime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		MESID, ROLEID, SALEID, MESCONTENT, GETTIME
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="org.come.entity.Message">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from MESSAGE
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.math.BigDecimal">
+		select
+		<include refid="Base_Column_List" />
+		from MESSAGE
+		where MESID = #{mesid,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+		delete from MESSAGE
+		where MESID = #{mesid,jdbcType=DECIMAL}
+	</delete>
+	<delete id="deleteByExample" parameterType="org.come.entity.MessageExample">
+		delete from MESSAGE
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="org.come.entity.Message">
+		<selectKey keyProperty="mesid" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select seq_message_id.nextval from dual
+		</selectKey>
+		insert into MESSAGE (MESID, ROLEID, SALEID,
+		MESCONTENT, GETTIME)
+		values (#{mesid,jdbcType=DECIMAL}, #{roleid,jdbcType=DECIMAL},
+		#{saleid,jdbcType=DECIMAL},
+		#{mescontent,jdbcType=VARCHAR}, #{gettime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="org.come.entity.Message">
+		insert into MESSAGE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mesid != null">
+				MESID,
+			</if>
+			<if test="roleid != null">
+				ROLEID,
+			</if>
+			<if test="saleid != null">
+				SALEID,
+			</if>
+			<if test="mescontent != null">
+				MESCONTENT,
+			</if>
+			<if test="gettime != null">
+				GETTIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mesid != null">
+				#{mesid,jdbcType=DECIMAL},
+			</if>
+			<if test="roleid != null">
+				#{roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="saleid != null">
+				#{saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="mescontent != null">
+				#{mescontent,jdbcType=VARCHAR},
+			</if>
+			<if test="gettime != null">
+				#{gettime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="org.come.entity.MessageExample"
+		resultType="java.lang.Integer">
+		select count(*) from MESSAGE
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update MESSAGE
+		<set>
+			<if test="record.mesid != null">
+				MESID = #{record.mesid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.roleid != null">
+				ROLEID = #{record.roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.saleid != null">
+				SALEID = #{record.saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.mescontent != null">
+				MESCONTENT = #{record.mescontent,jdbcType=VARCHAR},
+			</if>
+			<if test="record.gettime != null">
+				GETTIME = #{record.gettime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update MESSAGE
+		set MESID = #{record.mesid,jdbcType=DECIMAL},
+		ROLEID = #{record.roleid,jdbcType=DECIMAL},
+		SALEID = #{record.saleid,jdbcType=DECIMAL},
+		MESCONTENT = #{record.mescontent,jdbcType=VARCHAR},
+		GETTIME = #{record.gettime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Message">
+		update MESSAGE
+		<set>
+			<if test="roleid != null">
+				ROLEID = #{roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="saleid != null">
+				SALEID = #{saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="mescontent != null">
+				MESCONTENT = #{mescontent,jdbcType=VARCHAR},
+			</if>
+			<if test="gettime != null">
+				GETTIME = #{gettime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where MESID = #{mesid,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="org.come.entity.Message">
+		update MESSAGE
+		set ROLEID = #{roleid,jdbcType=DECIMAL},
+		SALEID = #{saleid,jdbcType=DECIMAL},
+		MESCONTENT = #{mescontent,jdbcType=VARCHAR},
+		GETTIME = #{gettime,jdbcType=TIMESTAMP}
+		where MESID = #{mesid,jdbcType=DECIMAL}
+	</update>
+</mapper>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.BabyMapper">
+	<sql id="BABY_LIST">
+		BABYID,
+		ROLEID,
+		BABYNAME,
+		QIZHI,
+		NEILI,
+		ZHILI,
+		NAILI,
+		MINGQI,
+		DAODE,
+		PANNI,
+		WANXING,
+		QINGMI,
+		XIAOXIN,
+		WENBAO,
+		PILAO,
+		YANGYUJIN,
+		CHILDSEX,
+		BABYAGE,
+		OUTCOME,
+		TALENTS,
+		PARTS,
+		ROLENAME
+	</sql>
+	<!-- 查找最新表ID -->
+	<select id="selectMaxID" resultType="java.math.BigDecimal">
+		select max(BABYID) from baby
+	</select>
+	<!-- 查找全部宝宝 -->
+	<select id="selectAllBaby" resultType="org.come.entity.Baby">
+		SELECT
+		<include refid="BABY_LIST" />
+		FROM baby 
+	</select>
+	<!-- 创建宝宝信息 -->
+	<insert id="createBaby" parameterType="org.come.entity.Baby">
+		insert into baby(BABYID,BABYNAME,ROLEID,CHILDSEX)
+		values(#{babyid },#{babyname},#{roleid},#{childSex})
+	</insert>
+	<!-- 查找角色所有宝宝 -->
+	<select id="selectBabyByRolename" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Baby">
+		SELECT
+		<include refid="BABY_LIST" />
+		FROM baby WHERE roleid = #{ roleid }
+	</select>
+
+	<!-- 修改宝宝信息 -->
+	<update id="updateBaby" parameterType="org.come.entity.Baby">
+		UPDATE baby SET
+		BABYNAME = #{ babyname},
+		QIZHI = #{ qizhi },NEILI = #{ neili },
+		ZHILI = #{ zhili },NAILI = #{ naili },
+		MINGQI = #{ mingqi },DAODE = #{ daode },
+		PANNI = #{ panni },WANXING = #{ wanxing },
+		QINGMI = #{ qingmi },XIAOXIN = #{ xiaoxin },
+		WENBAO = #{ wenbao },PILAO = #{ pilao },
+		YANGYUJIN = #{ yangyujin },CHILDSEX = #{ childSex },
+		BABYAGE = #{ babyage },OUTCOME = #{ outcome },
+		TALENTS = #{ Talents },PARTS = #{ parts }
+		WHERE babyid =#{babyid }
+	</update>
+	
+	<!-- HGC-2020-01-20 -->
+	<!-- 批量删除 -->
+	<delete id="deleteBabyList" parameterType="java.util.List">
+		delete form baby where BABYID in
+		<foreach collection="list" item="babyid" open="(" separator=","
+			close=")">
+			#{babyid}
+		</foreach>
+	</delete>
+
+	<!-- 创建宝宝信息 -->
+	<insert id="createBabyList" parameterType="java.util.List">
+		insert into
+		baby(
+		BABYID,BABYNAME,QIZHI,NEILI,ZHILI,NAILI,MINGQI,
+		DAODE,PANNI,WANXING,QINGMI,XIAOXIN,WENBAO,PILAO,
+		YANGYUJIN,ROLEID,BABYAGE,CHILDSEX,OUTCOME,TALENTS,
+		PARTS)
+		<foreach collection="list" item="item" separator="union all">
+			select
+			#{item.babyid},#{item.babyname},#{item.qizhi},#{item.neili}
+			,#{item.zhili},#{item.naili},#{item.mingqi},#{item.daode}
+			,#{item.panni},#{item.wanxing},#{item.qingmi},#{item.xiaoxin}
+			,#{item.wenbao},#{item.pilao},#{item.yangyujin},#{item.roleid}
+			,#{item.babyage},#{item.childSex},#{item.outcome},#{item.Talents}
+			,#{item.parts} form dual
+		</foreach>
+	</insert>
+
+	<!-- 修改宝宝信息 -->
+	<update id="updateBabyList" parameterType="java.util.List">
+		UPDATE baby
+		<trim prefix="set" prefixOverrides=",">
+			<trim prefix="BABYNAME =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.babyname}
+				</foreach>
+			</trim>
+			<trim prefix="QIZHI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.qizhi}
+				</foreach>
+			</trim>
+			<trim prefix="NEILI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.neili}
+				</foreach>
+			</trim>
+			<trim prefix="ZHILI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.zhili}
+				</foreach>
+			</trim>
+			<trim prefix="NAILI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.naili}
+				</foreach>
+			</trim>
+			<trim prefix="MINGQI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.mingqi}
+				</foreach>
+			</trim>
+			<trim prefix="DAODE =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.daode}
+				</foreach>
+			</trim>
+			<trim prefix="PANNI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.panni}
+				</foreach>
+			</trim>
+			<trim prefix="WANXING =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.wanxing}
+				</foreach>
+			</trim>
+			<trim prefix="QINGMI =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.qingmi}
+				</foreach>
+			</trim>
+			<trim prefix="XIAOXIN =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.xiaoxin}
+				</foreach>
+			</trim>
+			<trim prefix="WENBAO =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.wenbao}
+				</foreach>
+			</trim>
+			<trim prefix="PILAO =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.pilao}
+				</foreach>
+			</trim>
+			<trim prefix="YANGYUJIN =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid = #{item.babyid}
+					then #{item.yangyujin}
+				</foreach>
+			</trim>
+			<trim prefix="CHILDSEX =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid =
+					#{item.babyid}
+					then #{item.childSex}
+				</foreach>
+			</trim>
+			<trim prefix="BABYAGE =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid =
+					#{item.babyid}
+					then #{item.babyage}
+				</foreach>
+			</trim>
+			<trim prefix="OUTCOME =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid =
+					#{item.babyid}
+					then #{item.outcome}
+				</foreach>
+			</trim>
+			<trim prefix="TALENTS =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid =
+					#{item.babyid}
+					then #{item.Talents}
+				</foreach>
+			</trim>
+			<trim prefix="PARTS =case" suffix="end,">
+				<foreach collection="list" item="item">
+					when babyid =
+					#{item.babyid}
+					then #{item.parts}
+				</foreach>
+			</trim>
+		</trim>
+		where
+		<foreach collection="list" item="item" separator="or">
+			babyid=#{item.babyid}
+		</foreach>
+	</update>
+	<!-- 创建宝宝信息 -->
+	<insert id="createBabySingle" parameterType="org.come.entity.Baby">
+		insert into
+		baby(
+		BABYID,BABYNAME,QIZHI,NEILI,ZHILI,NAILI,MINGQI,
+		DAODE,PANNI,WANXING,QINGMI,XIAOXIN,WENBAO,PILAO,
+		YANGYUJIN,ROLEID,BABYAGE,CHILDSEX,OUTCOME,TALENTS,
+		PARTS)
+		values(#{babyid},#{babyname},#{qizhi},#{neili}
+		,#{zhili},#{naili},#{mingqi},#{daode}
+		,#{panni},#{wanxing},#{qingmi},#{xiaoxin}
+		,#{wenbao},#{pilao},#{yangyujin},#{roleid}
+		,#{babyage},#{childSex},#{outcome},#{Talents}
+		,#{parts})
+	</insert>
+
+	<!-- 单挑删除 -->
+	<delete id="deleteBabySingle" parameterType="java.math.BigDecimal">
+		delete form baby where BABYID = #{babyid}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.ServiceAreaMapper" >
+  <resultMap id="BaseResultMap" type="org.come.bean.ServiceArea" >
+    <id column="SID" property="sid" jdbcType="DECIMAL" />
+    <result column="Sname" property="sname" jdbcType="VARCHAR" />
+    <result column="SDATE" property="sdate" javaType="java.util.Date" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SID, Sname, SDATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select *
+    from SERVICEAREA
+    where SID = #{sid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from SERVICEAREA
+    where SID = #{sid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="org.come.bean.ServiceArea" >
+  	
+    insert into SERVICEAREA (SID, "Sname", SDATE,AGENTS,DIVIDEDINTO, MANAEID)
+    values (#{sid,jdbcType=DECIMAL}, #{sname,jdbcType=VARCHAR}, sysdate,#{agents},#{dividedinto},#{manaeid})
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.bean.ServiceArea" >
+    insert into SERVICEAREA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        SID,
+      </if>
+      <if test="sname != null" >
+        Sname,
+      </if>
+      <if test="sdate != null" >
+        SDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        #{sid,jdbcType=DECIMAL},
+      </if>
+      <if test="sname != null" >
+        #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="sdate != null" >
+        #{sdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.bean.ServiceArea" >
+    update SERVICEAREA
+    <set >
+      <if test="sname != null" >
+        Sname = #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="sdate != null" >
+        SDATE = #{sdate,jdbcType=DATE},
+      </if>
+    </set>
+    where SID = #{sid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.bean.ServiceArea" >
+    update SERVICEAREA
+    set "Sname" = #{sname,jdbcType=VARCHAR},
+      SDATE = #{sdate,jdbcType=DATE}
+    where SID = #{sid,jdbcType=DECIMAL}
+  </update>
+    <select id="selectServiceAreaid" resultType="java.math.BigDecimal"  parameterType="org.come.bean.ServiceArea">
+    select SID
+    from SERVICEAREA 
+    <where>
+    <if test="sid != null" >
+     and SID = #{sid,jdbcType=DECIMAL}
+    </if>
+    <if test="sname != null" >
+     and "Sname" = #{sname,jdbcType=VARCHAR}
+    </if>
+    </where> 
+  </select>
+  
+  <select id="selectAllService" resultType="org.come.bean.ServiceArea">
+  
+   select * from servicearea
+  </select>
+  
+  <!--  依据用户id查询信息  -->
+  <select id="selectListAreaForUid" parameterType="java.math.BigDecimal" resultType="org.come.bean.ServiceArea">
+  
+    select * from servicearea where MANAEID=#{manageid}
+  </select>
+  
+  <!-- 依据页码查询区域信息 -->
+  <select id="selectServiceForPage" parameterType="int" resultType="org.come.bean.ServiceArea">
+  
+   SELECT * FROM (Select ROWNUM AS ROWNO, T.*   from servicearea T
+
+     where  ROWNUM &lt;= (#{pageNumber}*10)) TABLE_ALIAS WHERE TABLE_ALIAS.ROWNO  &gt;= ((#{pageNumber}-1)*10+1)
+  
+  
+  </select>
+</mapper>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.RoleorderMapper">
+	<resultMap id="BaseResultMap" type="org.come.entity.Roleorder">
+		<id column="ORDERID" property="orderid" jdbcType="DECIMAL" />
+		<result column="SALEID" property="saleid" jdbcType="DECIMAL" />
+		<result column="BUYTIME" property="buytime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+		<result column="ORDERNUMBER" property="ordernumber" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ORDERID, SALEID, BUYTIME, STATUS, ROLEID, ORDERNUMBER
+	</sql>
+	
+	<select id="selectRoleOrders" parameterType="java.math.BigDecimal" resultType="org.come.entity.Roleorder">
+		select
+		r.*,s.salename,s.saleskin,s.saleprice,s.saletype,s.otherid
+		from ROLEORDER r,Salegoods s
+		where r.saleid = s.saleid and r.ROLEID = #{roleid,jdbcType=DECIMAL}
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="org.come.entity.RoleorderExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from ROLEORDER
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.math.BigDecimal">
+		select
+		<include refid="Base_Column_List" />
+		from ROLEORDER
+		where ORDERID = #{orderid,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+		delete from ROLEORDER
+		where ORDERID = #{orderid,jdbcType=DECIMAL}
+	</delete>
+	<delete id="deleteByExample" parameterType="org.come.entity.RoleorderExample">
+		delete from ROLEORDER
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="org.come.entity.Roleorder">
+		<selectKey keyProperty="orderid" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select seq_roleorder_id.nextval from dual
+		</selectKey>
+		insert into ROLEORDER (ORDERID, SALEID, BUYTIME,
+		STATUS, ROLEID, ORDERNUMBER
+		)
+		values (#{orderid,jdbcType=DECIMAL}, #{saleid,jdbcType=DECIMAL},
+		#{buytime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=DECIMAL}, #{roleid,jdbcType=DECIMAL}, #{ordernumber,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="org.come.entity.Roleorder">
+		insert into ROLEORDER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orderid != null">
+				ORDERID,
+			</if>
+			<if test="saleid != null">
+				SALEID,
+			</if>
+			<if test="buytime != null">
+				BUYTIME,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="roleid != null">
+				ROLEID,
+			</if>
+			<if test="ordernumber != null">
+				ORDERNUMBER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orderid != null">
+				#{orderid,jdbcType=DECIMAL},
+			</if>
+			<if test="saleid != null">
+				#{saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="buytime != null">
+				#{buytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="roleid != null">
+				#{roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="ordernumber != null">
+				#{ordernumber,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="org.come.entity.RoleorderExample"
+		resultType="java.lang.Integer">
+		select count(*) from ROLEORDER
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update ROLEORDER
+		<set>
+			<if test="record.orderid != null">
+				ORDERID = #{record.orderid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.saleid != null">
+				SALEID = #{record.saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.buytime != null">
+				BUYTIME = #{record.buytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.status != null">
+				STATUS = #{record.status,jdbcType=DECIMAL},
+			</if>
+			<if test="record.roleid != null">
+				ROLEID = #{record.roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="record.ordernumber != null">
+				ORDERNUMBER = #{record.ordernumber,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update ROLEORDER
+		set ORDERID = #{record.orderid,jdbcType=DECIMAL},
+		SALEID = #{record.saleid,jdbcType=DECIMAL},
+		BUYTIME = #{record.buytime,jdbcType=TIMESTAMP},
+		STATUS = #{record.status,jdbcType=DECIMAL},
+		ROLEID = #{record.roleid,jdbcType=DECIMAL},
+		ORDERNUMBER = #{record.ordernumber,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Roleorder">
+		update ROLEORDER
+		<set>
+			<if test="saleid != null">
+				SALEID = #{saleid,jdbcType=DECIMAL},
+			</if>
+			<if test="buytime != null">
+				BUYTIME = #{buytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="roleid != null">
+				ROLEID = #{roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="ordernumber != null">
+				ORDERNUMBER = #{ordernumber,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ORDERID = #{orderid,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="org.come.entity.Roleorder">
+		update ROLEORDER
+		set SALEID = #{saleid,jdbcType=DECIMAL},
+		BUYTIME = #{buytime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=DECIMAL},
+		ROLEID = #{roleid,jdbcType=DECIMAL},
+		ORDERNUMBER = #{ordernumber,jdbcType=VARCHAR}
+		where ORDERID = #{orderid,jdbcType=DECIMAL}
+	</update>
+</mapper>

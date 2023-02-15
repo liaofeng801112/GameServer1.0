@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.SalegoodsMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.Salegoods" >
+    <id column="SALEID" property="saleid" jdbcType="DECIMAL" />
+    <result column="SALENAME" property="salename" jdbcType="VARCHAR" />
+    <result column="SALETYPE" property="saletype" jdbcType="DECIMAL" />
+    <result column="OTHERID" property="otherid" jdbcType="DECIMAL" />
+    <result column="CONTIONTYPE" property="contiontype" jdbcType="VARCHAR" />
+    <result column="FLAG" property="flag" jdbcType="DECIMAL" />
+    <result column="UPTIME" property="uptime" jdbcType="TIMESTAMP" />
+    <result column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+    <result column="BUYROLE" property="buyrole" jdbcType="DECIMAL" />
+    <result column="SALEPRICE" property="saleprice" jdbcType="DECIMAL" />
+    <result column="SALESKIN" property="saleskin" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    SALEID, SALENAME, SALETYPE, OTHERID, CONTIONTYPE, FLAG, UPTIME, ROLEID, BUYROLE, 
+    SALEPRICE, SALESKIN
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.come.entity.SalegoodsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from SALEGOODS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from SALEGOODS
+    where SALEID = #{saleid,jdbcType=DECIMAL}
+  </select>
+   <select id="selectByAll" resultType="org.come.entity.Salegoods">
+    select 
+    <include refid="Base_Column_List" />
+    from SALEGOODS
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from SALEGOODS
+    where SALEID = #{saleid,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.come.entity.SalegoodsExample" >
+    delete from SALEGOODS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.Salegoods" >
+  		<selectKey keyProperty="saleid" resultType="java.math.BigDecimal"
+			order="BEFORE">
+			select seq_salegoods_id.nextval from dual
+		</selectKey>
+    insert into SALEGOODS (SALEID, SALENAME, SALETYPE, 
+      OTHERID, CONTIONTYPE, FLAG, 
+      UPTIME, ROLEID, BUYROLE, 
+      SALEPRICE, SALESKIN)
+    values (#{saleid,jdbcType=DECIMAL}, #{salename,jdbcType=VARCHAR}, #{saletype,jdbcType=DECIMAL}, 
+      #{otherid,jdbcType=DECIMAL}, #{contiontype,jdbcType=VARCHAR}, #{flag,jdbcType=DECIMAL}, 
+      #{uptime,jdbcType=TIMESTAMP}, #{roleid,jdbcType=DECIMAL}, #{buyrole,jdbcType=DECIMAL}, 
+      #{saleprice,jdbcType=DECIMAL}, #{saleskin,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.Salegoods" >
+    insert into SALEGOODS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="saleid != null" >
+        SALEID,
+      </if>
+      <if test="salename != null" >
+        SALENAME,
+      </if>
+      <if test="saletype != null" >
+        SALETYPE,
+      </if>
+      <if test="otherid != null" >
+        OTHERID,
+      </if>
+      <if test="contiontype != null" >
+        CONTIONTYPE,
+      </if>
+      <if test="flag != null" >
+        FLAG,
+      </if>
+      <if test="uptime != null" >
+        UPTIME,
+      </if>
+      <if test="roleid != null" >
+        ROLEID,
+      </if>
+      <if test="buyrole != null" >
+        BUYROLE,
+      </if>
+      <if test="saleprice != null" >
+        SALEPRICE,
+      </if>
+      <if test="saleskin != null" >
+        SALESKIN,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="saleid != null" >
+        #{saleid,jdbcType=DECIMAL},
+      </if>
+      <if test="salename != null" >
+        #{salename,jdbcType=VARCHAR},
+      </if>
+      <if test="saletype != null" >
+        #{saletype,jdbcType=DECIMAL},
+      </if>
+      <if test="otherid != null" >
+        #{otherid,jdbcType=DECIMAL},
+      </if>
+      <if test="contiontype != null" >
+        #{contiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=DECIMAL},
+      </if>
+      <if test="uptime != null" >
+        #{uptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="buyrole != null" >
+        #{buyrole,jdbcType=DECIMAL},
+      </if>
+      <if test="saleprice != null" >
+        #{saleprice,jdbcType=DECIMAL},
+      </if>
+      <if test="saleskin != null" >
+        #{saleskin,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.come.entity.SalegoodsExample" resultType="java.lang.Integer" >
+    select count(*) from SALEGOODS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update SALEGOODS
+    <set >
+      <if test="record.saleid != null" >
+        SALEID = #{record.saleid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.salename != null" >
+        SALENAME = #{record.salename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saletype != null" >
+        SALETYPE = #{record.saletype,jdbcType=DECIMAL},
+      </if>
+      <if test="record.otherid != null" >
+        OTHERID = #{record.otherid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.contiontype != null" >
+        CONTIONTYPE = #{record.contiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flag != null" >
+        FLAG = #{record.flag,jdbcType=DECIMAL},
+      </if>
+      <if test="record.uptime != null" >
+        UPTIME = #{record.uptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.roleid != null" >
+        ROLEID = #{record.roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.buyrole != null" >
+        BUYROLE = #{record.buyrole,jdbcType=DECIMAL},
+      </if>
+      <if test="record.saleprice != null" >
+        SALEPRICE = #{record.saleprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.saleskin != null" >
+        SALESKIN = #{record.saleskin,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update SALEGOODS
+    set SALEID = #{record.saleid,jdbcType=DECIMAL},
+      SALENAME = #{record.salename,jdbcType=VARCHAR},
+      SALETYPE = #{record.saletype,jdbcType=DECIMAL},
+      OTHERID = #{record.otherid,jdbcType=DECIMAL},
+      CONTIONTYPE = #{record.contiontype,jdbcType=VARCHAR},
+      FLAG = #{record.flag,jdbcType=DECIMAL},
+      UPTIME = #{record.uptime,jdbcType=TIMESTAMP},
+      ROLEID = #{record.roleid,jdbcType=DECIMAL},
+      BUYROLE = #{record.buyrole,jdbcType=DECIMAL},
+      SALEPRICE = #{record.saleprice,jdbcType=DECIMAL},
+      SALESKIN = #{record.saleskin,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Salegoods" >
+    update SALEGOODS
+    <set >
+      <if test="salename != null" >
+        SALENAME = #{salename,jdbcType=VARCHAR},
+      </if>
+      <if test="saletype != null" >
+        SALETYPE = #{saletype,jdbcType=DECIMAL},
+      </if>
+      <if test="otherid != null" >
+        OTHERID = #{otherid,jdbcType=DECIMAL},
+      </if>
+      <if test="contiontype != null" >
+        CONTIONTYPE = #{contiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=DECIMAL},
+      </if>
+      <if test="uptime != null" >
+        UPTIME = #{uptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleid != null" >
+        ROLEID = #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="buyrole != null" >
+        BUYROLE = #{buyrole,jdbcType=DECIMAL},
+      </if>
+      <if test="saleprice != null" >
+        SALEPRICE = #{saleprice,jdbcType=DECIMAL},
+      </if>
+      <if test="saleskin != null" >
+        SALESKIN = #{saleskin,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SALEID = #{saleid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.Salegoods" >
+    update SALEGOODS
+    set SALENAME = #{salename,jdbcType=VARCHAR},
+      SALETYPE = #{saletype,jdbcType=DECIMAL},
+      OTHERID = #{otherid,jdbcType=DECIMAL},
+      CONTIONTYPE = #{contiontype,jdbcType=VARCHAR},
+      FLAG = #{flag,jdbcType=DECIMAL},
+      UPTIME = #{uptime,jdbcType=TIMESTAMP},
+      ROLEID = #{roleid,jdbcType=DECIMAL},
+      BUYROLE = #{buyrole,jdbcType=DECIMAL},
+      SALEPRICE = #{saleprice,jdbcType=DECIMAL},
+      SALESKIN = #{saleskin,jdbcType=VARCHAR}
+    where SALEID = #{saleid,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 通过角色id 查询订单 -->
+  <select id="selectSaleGoodsByRoleid" resultType="org.come.entity.Salegoods">
+  	select * from SALEGOODS where otherid = #{roleid} and flag = 2 
+  </select>
+</mapper>

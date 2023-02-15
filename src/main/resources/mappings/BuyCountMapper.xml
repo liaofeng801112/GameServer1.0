@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.BuyCountMapper">
+	<sql id="BuyCountBean">
+		Bid,
+		Ptype,
+		shopId,
+		shopType,
+		totalNum,
+		totalPrice,
+		weekNum,
+		weekPrice,
+		dayNum,
+		dayPrice
+	</sql>
+	<!-- 添加销售统计 -->
+	<insert id="insertBuyCount" parameterType="org.come.entity.BuyCount">
+		insert into BuyCount (Bid,Ptype,shopId,shopType,totalNum,totalPrice,weekNum,weekPrice,dayNum,dayPrice) 
+		values(#{Bid},#{Ptype},#{shopId},#{shopType},#{totalNum},#{totalPrice},#{weekNum},#{weekPrice},#{dayNum},#{dayPrice})
+	</insert>
+	<!-- 修改销售统计 -->
+	<update id="updateBuyCount" parameterType="org.come.entity.BuyCount">
+		UPDATE BuyCount SET
+		totalNum=#{totalNum},
+		totalPrice=#{totalPrice},
+		weekNum=#{weekNum},
+		weekPrice=#{weekPrice},
+		dayNum=#{dayNum},
+		dayPrice=#{dayPrice}
+		WHERE Bid=#{ Bid }
+	</update>
+	<!-- 查询销售记录-->
+	<select id="selectBuyCount" parameterType="long"
+		resultType="org.come.entity.BuyCount">
+		select
+		<include refid="BuyCountBean" />
+		from BuyCount where Bid = #{ Bid }
+	</select>
+</mapper>

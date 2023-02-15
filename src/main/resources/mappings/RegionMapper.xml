@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.RegionMapper">
+	<!-- 三端 -->
+	<resultMap type="org.come.entity.Region" id="region">
+		<result column="RE_ID" property="regionId"/>
+		<result column="RE_NAME" property="regionName"/>
+		<result column="RE_CTIME" property="regionCreTime"/>
+		<result column="RE_MTIME" property="regionModTime"/>
+		<result column="RA_ID" property="regionAllId"/>
+		<result column="RA_NAME" property="regionAllName"/>
+	</resultMap>
+	
+	<select id="selectRegion" resultMap="region">
+		SELECT * FROM REGION_VIEW 
+		<where>
+			<if test="quId != null and quId != '' ">
+				AND RE_ID = #{quId} 
+			</if>
+			<if test="raName != null and raName != '' ">
+				AND RA_NAME LIKE CONCAT('%' , CONCAT( #{raName} , '%')) 
+			</if>
+		</where>
+		order by RE_ID 
+	</select>
+
+	<resultMap type="org.come.entity.RoleTableNew" id="roleTable">
+		<result column="ROLE_ID" property="role_id"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="SPECIES_ID" property="species_id"/>
+		<result column="SUMMONING_ID" property="summoning_id"/>
+		<result column="GANG_ID" property="gang_id"/>
+		<result column="MOUNT_ID" property="mount_id"/>
+		<result column="TROOP_ID" property="troop_id"/>
+		<result column="RACE_ID" property="race_id"/>
+		<result column="SKILL_ID" property="skill_id"/>
+		<result column="BOOTH_ID" property="booth_id"/>
+		<result column="TASK_ID" property="task_id"/>
+		<result column="HP" property="hp"/>
+		<result column="MP" property="mp"/>
+		<result column="GOLD" property="gold"/>
+		<result column="CODECARD" property="codecard"/>
+		<result column="EXPERIENCE" property="experience"/>
+		<result column="GRADE" property="grade"/>
+		<result column="PRESTIGE" property="prestige"/>
+		<result column="PKRECORD" property="pkrecord"/>
+		<result column="ROLENAME" property="rolename"/>
+		<result column="TITLE" property="title"/>
+		<result column="PATH" property="path"/>
+		<result column="SEX" property="sex"/>
+		<result column="LOCALNAME" property="localname"/>
+		<result column="SKILL" property="skill"/>
+		<result column="X" property="x"/>
+		<result column="Y" property="y"/>
+		<result column="MAPID" property="mapid"/>
+		<result column="UPTIME" property="uptime"/>
+		<result column="GANGPOST" property="gangpost"/>
+		<result column="ACHIEVEMENT" property="achievement"/>
+		<result column="CONTRIBUTION" property="contribution"/>
+		<result column="BONE" property="bone"/>
+		<result column="SPIR" property="spir"/>
+		<result column="POWER" property="power"/>
+		<result column="SPEED" property="speed"/>
+		<result column="CANPOINT" property="canpoint"/>
+		<result column="CAPTAIN" property="captain"/>
+		<result column="SAVEGOLD" property="savegold"/>
+		<result column="PASSWORD" property="password"/>
+		<result column="GANGNAME" property="gangname"/>
+		<result column="HAVEBABY" property="havebaby"/>
+		<result column="NEWROLE" property="newrole"/>
+		<result column="RACENAME" property="racename"/>
+		<result column="MAXEXP" property="maxexp"/>
+		<result column="MARRYOBJECT" property="marryobject"/>
+		<result column="SKILLS" property="skills"/>
+		<result column="TIMINGGOOD" property="timinggood"/>
+		<result column="TURNAROUND" property="turnaround"/>
+		<result column="TASKDAILY" property="taskdaily"/>
+		<result column="BORN" property="born"/>
+		<result column="RESISTANCE" property="resistance"/>
+		<result column="SERVERMESTRING" property="servermestring"/>
+		<result column="TASKRECEIVE" property="taskreceive"/>
+		<result column="TASKCOMPLETE" property="taskcomplete"/>
+		<result column="TASKDATA" property="taskdata"/>
+		<result column="FIGHTING" property="fighting"/>
+		<result column="DBEXP" property="dbexp"/>
+		<result column="SCORE" property="score"/>
+		<result column="KILL" property="kill"/>
+		<result column="BABYID" property="babyid"/>
+		<result column="DRAWING" property="drawing"/>
+		<result column="CALM" property="calm"/>
+		<result column="XIUWEI" property="xiuwei"/>
+		<result column="EXTRAPOINT" property="extrapoint"/>
+	</resultMap>
+	<select id="selectRole" resultMap="roleTable">
+
+		SELECT * FROM role_table WHERE USER_ID = #{userId} AND SERVERMESTRING = #{quid} 
+	</select>
+	
+	<select id="selectRegionAll" resultType="java.lang.String">
+
+		select ot_belong from openareatable GROUP by ot_belong 
+	</select>
+</mapper>

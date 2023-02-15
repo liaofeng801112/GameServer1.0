@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- CHONGJIPACK -->
+<mapper namespace="org.come.mapper.ChongjipackMapper">
+    <!-- 结果映射 -->
+    <resultMap id="chongjipackMap" type="org.come.entity.ChongjipackBean">
+        <result column="ID" property="id" jdbcType="INTEGER" />
+        <result column="PACKTYPE" property="packtype" jdbcType="INTEGER" />
+        <result column="PACKGRADETYPE" property="packgradetype" jdbcType="INTEGER" />
+        <result column="PACKGRADE" property="packgrade" jdbcType="VARCHAR" />
+        <result column="PACKGOODS" property="packgoods" jdbcType="VARCHAR" />
+        <result column="GETNUMBER" property="getnumber" jdbcType="INTEGER" />
+        <result column="DATETIME" property="datetime" jdbcType="VARCHAR" />
+        <result column="CANPAYMONEY" property="canpaymoney" jdbcType="INTEGER" />
+        <result column="HUITIME" property="huitime" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        ID, PACKTYPE, PACKGRADETYPE, PACKGRADE, PACKGOODS, GETNUMBER, 
+        DATETIME, CANPAYMONEY, HUITIME
+    </sql>
+    
+    <insert id="insertChongjipack" parameterType="org.come.entity.ChongjipackBean" >
+    	insert into CHONGJIPACK (ID, PACKTYPE , PACKGRADETYPE, PACKGRADE , PACKGOODS,GETNUMBER,DATETIME,CANPAYMONEY,HUITIME)
+    	values (SEQ_CHONGJIPACK_ID.nextval, #{packtype}, #{packgradetype}, #{packgrade}, #{packgoods}, #{getnumber}, #{datetime}, #{canpaymoney},#{huitime})
+  	</insert>
+    
+    <select id="selectAllPack" resultMap="chongjipackMap">
+    	select * from CHONGJIPACK 
+  	</select>
+    
+    <select id="selectChongjipack" resultMap="chongjipackMap">
+    	select * from CHONGJIPACK where PACKTYPE=#{type} order by DATETIME desc
+  	</select>
+  
+    <delete id="deleteChongjipack">
+    	delete from CHONGJIPACK
+    	where ID = #{id}
+  	</delete>
+   
+   
+  
+  
+  <update id="updateChongjipack" parameterType="org.come.entity.ChongjipackBean">
+		UPDATE CHONGJIPACK SET
+	  
+      <if test="packgradetype != null" >
+        PACKGRADETYPE = #{ packgradetype },
+      </if>
+      <if test="packgrade != null" >
+        PACKGRADE = #{ packgrade },
+      </if>
+      <if test="packgoods != null" >
+        PACKGOODS = #{ packgoods },
+      </if>
+      <if test="getnumber != null" >
+        GETNUMBER = #{ getnumber },
+      </if>
+      <if test="datetime != null" >
+        DATETIME = #{ datetime },
+      </if>
+      <if test="canpaymoney != null" >
+        CANPAYMONEY = #{ canpaymoney },
+      </if>
+      <if test="huitime != null" >
+        HUITIME = #{huitime },
+      </if>
+      <if test="packtype != null" >
+       PACKTYPE = #{ packtype }
+      </if>
+      where ID = #{id}
+	</update>
+</mapper>

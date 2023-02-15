@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.FriendMapper">
+
+	<!-- 添加好友 -->
+	<insert id="addFriend" parameterType="org.come.entity.Friend">
+		<selectKey keyProperty="fid" resultType="java.math.BigDecimal" order="BEFORE">
+			select seq_friend_id.nextval from dual
+		</selectKey>
+		insert into friend
+		values(#{ fid },#{roleid},#{friendid})
+	</insert>
+
+	<delete id="deleteFriend" parameterType="org.come.entity.Friend">
+		delete from friend where roleid=#{roleid} and friendid=#{friendid}
+	</delete>
+
+
+   <select id="allFriend" resultType="org.come.entity.Friend">
+		SELECT * FROM friend
+	</select>
+</mapper>

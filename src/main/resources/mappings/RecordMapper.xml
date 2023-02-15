@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.RecordMapper">
+  <insert id="insert" parameterType="org.come.entity.Record" >
+    insert into RECORD (RECORDID, RECORDTYPE , TEXT, RECORDTIME)
+    values (SEQ_RECORD_ID.nextval, #{recordType}, #{text,jdbcType=VARCHAR}, #{recordTime,jdbcType=VARCHAR})
+  </insert>
+  <!-- 查询记录 -->
+  <select id="selectRecordByType" resultType="org.come.entity.Record">
+    SELECT  * FROM  (select RECORDID as recordId,RECORDTYPE as recordType , TEXT as text, RECORDTIME as recordTime from  RECORD where RECORDTYPE = #{recordType}    ORDER  BY RECORDID DESC) W  WHERE   ROWNUM &lt;=#{count}
+  </select>
+</mapper>

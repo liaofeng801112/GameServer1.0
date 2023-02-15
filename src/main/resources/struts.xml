@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+<!-- 登录 -->
+	<package name="login" namespace="/login" extends="struts-default">
+	  <!-- 登录界面 -->
+	   <action name="login" class="com.itheima.test.TestMybatis" method="elseChoose">
+	      
+	      <!-- 成功跳转到登录页 -->
+	      <result name="success">
+	        /index.jsp
+	      </result>
+	   </action>
+	</package>
+</struts>

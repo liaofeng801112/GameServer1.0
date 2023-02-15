@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.GoodsRoleUsertMapper" >
+	<resultMap id="goodsRoleUser" type="org.come.entity.GoodsRoleUser" >
+	    <result column="GOODSID" property="goodsid" />
+	    <result column="GOODSNAME" property="goodsname" />
+	    <result column="SKIN" property="skin" />
+	    <result column="TYPE" property="type" />
+	    <result column="QUALITY" property="quality" />
+	    <result column="VALUE" property="value" />
+	    <result column="INSTRUCTION" property="instruction" />
+	    <result column="RGID" property="rgid" />
+	    <result column="ROLE_ID" property="role_id" />
+	    <result column="STATUS" property="status" />
+	    <result column="USETIME" property="usetime" />
+	    <result column="DEFINEPRICE" property="defineprice" />
+	    <result column="MAPNAME" property="mapname" />
+	    <result column="MAPX" property="mapx" />
+	    <result column="MAPY" property="mapy" />
+	    <result column="PRICE" property="price" />
+	    <result column="CODECARD" property="codecard" />
+	    <result column="GOODLOCK" property="goodlock" />
+	    <result column="ROLENAME" property="rolename" />
+	    <result column="USER_ID" property="user_id" />
+	    <result column="USERNAME" property="username" />
+  	</resultMap>
+  	
+  	<select id="selectGoodsByPage" resultMap="goodsRoleUser">
+  		SELECT * FROM 
+		(
+		    SELECT A.* , ROWNUM RN  from 
+		    ( 
+		    	SELECT GOODSNAME,RGID,GOODSID,VALUE,ROLENAME,USETIME,STATUS FROM GOODSTABLE_ROLE_USERTABLE 
+		    	<where>
+		    		<if test="gRU.goodsname != null and gRU.goodsname != '' ">
+		    			AND GOODSNAME LIKE CONCAT('%' , CONCAT( #{gRU.goodsname}  ,'%')) 
+		    		</if>
+		    		<if test="gRU.rolename != null and gRU.rolename != '' ">
+		    			AND ROLENAME LIKE CONCAT('%' , CONCAT( #{gRU.rolename}  ,'%')) 
+		    		</if>
+		    		<if test="gRU.value != null and gRU.value != '' ">
+		    			AND VALUE LIKE CONCAT('%' , CONCAT( #{gRU.value}  ,'%')) 
+		    		</if>
+		    		<if test="gRU.goodsid != null and gRU.goodsid != 0 ">
+		    			AND GOODSID = #{gRU.goodsid} 
+		    		</if>
+		    		<if test="gRU.status != '' ">
+		    			AND STATUS = #{gRU.status} 
+		    		</if>
+		    	</where> 
+		     ${gRU.orderBy} ) A  
+		    WHERE ROWNUM &lt; #{gRU.end} 
+		 ) 
+		WHERE RN &gt;= #{gRU.start} 
+  	</select>
+  	
+  	<select id="selectGoodsCount" resultType="java.lang.Integer">
+  		SELECT COUNT(*) FROM (
+  			SELECT GOODSNAME,RGID,GOODSID,VALUE,ROLENAME,USETIME,STATUS FROM GOODSTABLE_ROLE_USERTABLE 
+  				<where>
+		    		<if test="gRU.goodsname != null and gRU.goodsname != '' ">
+		    			AND GOODSNAME LIKE CONCAT('%' , CONCAT( #{gRU.goodsname}  ,'%')) 
+		    		</if>
+		    		<if test="gRU.rolename != null and gRU.rolename != '' ">
+		    			AND ROLENAME LIKE CONCAT('%' , CONCAT( #{gRU.rolename}  ,'%')) 
+		    		</if>
+		    		<if test="gRU.value != null and gRU.value != '' ">
+		    			AND VALUE LIKE CONCAT('%' , CONCAT( #{gRU.value}  ,'%')) 
+		    		</if>
+		    		<if test="gRU.goodsid != null and gRU.goodsid != 0 ">
+		    			AND GOODSID = #{gRU.goodsid} 
+		    		</if>
+		    		<if test="gRU.status != '' ">
+		    			AND STATUS = #{gRU.status} 
+		    		</if>
+		    	</where>
+  		) 
+  	</select>
+  
+</mapper>  

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.TitletableMapper">
+
+	<!-- 根据角色ID查找角色称谓 -->
+	<select id="selectRoleAllTitle" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Titletable">
+		SELECT TITLEID,
+		ROLEID,
+		TITLENAME FROM TITLETABLE WHERE ROLEID = #{ roleid }
+	</select>
+
+	<!-- 添加角色称谓 -->
+	<insert id="createRoleTitle" parameterType="org.come.entity.Titletable">
+		<selectKey keyProperty="titleid" resultType="java.math.BigDecimal" order="BEFORE">
+			select seq_titletable_id.nextval from dual
+		</selectKey>
+		insert into TITLETABLE values(#{titleid},#{roleid},#{titlename})
+	</insert>
+	
+	<!-- 根据角色ID和称谓名称查找角色称谓 -->
+	<select id="selectRoleTitle"
+		resultType="org.come.entity.Titletable">
+		SELECT TITLEID,
+		ROLEID,
+		TITLENAME FROM TITLETABLE WHERE ROLEID = #{ roleid } AND TITLENAME = #{ titlename }
+	</select>
+	
+</mapper>

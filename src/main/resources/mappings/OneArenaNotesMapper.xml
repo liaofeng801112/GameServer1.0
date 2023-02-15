@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.OneArenaNotesMapper">
+	<!-- /**查询当前日期前最大ID*/ -->
+	<!-- BigDecimal selectMaxID(String time); -->
+	<!-- /**查询玩家战报且ID大于最小ID 按id 大到小排序 */ -->
+	<!-- List<OneArenaNotes> selectRole(BigDecimal roleId,BigDecimal min); -->
+	<!-- /**添加战报*/ -->
+	<!-- int insertOneArenaNotes(OneArenaNotes notes); -->
+	
+	
+	<!-- 查询当前日期前最大ID -->
+	<select id="selectMaxID" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+		select max(ID) from ONEARENANOTES
+		<where>
+			<if test="time != null and time != ''">
+				TIME &lt; #{time}
+			</if>
+		</where>
+	</select>
+	<!-- 查询玩家战报且ID大于最小ID 按id 大到小排序 -->
+	<select id="selectRole"  resultType="come.tool.oneArena.OneArenaNotes">
+		select ID,ROLE1,NAME1,SKIN1,LVL1,ROLE2,NAME2,SKIN2,LVL2,ISV,PLACE,TIME 
+		from ONEARENANOTES where (ROLE1 = #{roleId} or ROLE2 = #{roleId})
+		and ID &gt; #{min} order by ID desc
+	</select>
+	<!-- 添加战报 -->
+	<insert id="insertOneArenaNotes" parameterType="come.tool.oneArena.OneArenaNotes">
+		insert into ONEARENANOTES
+		(ID,ROLE1,NAME1,SKIN1,
+		LVL1,ROLE2,NAME2,SKIN2,
+		LVL2,ISV,PLACE,TIME)
+		values
+		(#{notes.id},#{notes.role1},#{notes.name1},#{notes.skin1},
+		#{notes.lvl1},#{notes.role2},#{notes.name2},#{notes.skin2},
+		#{notes.lvl2},#{notes.isV},#{notes.place},#{notes.time})
+	</insert>
+</mapper>
+

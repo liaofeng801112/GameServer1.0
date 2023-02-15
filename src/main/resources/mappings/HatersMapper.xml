@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.HatersMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.Haters" >
+    <id column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+    <result column="UNKNOWN" property="unknown" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ROLEID, UNKNOWN
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.come.entity.HatersExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from HATERS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from HATERS
+    where ROLEID = #{roleid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from HATERS
+    where ROLEID = #{roleid,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.come.entity.HatersExample" >
+    delete from HATERS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.Haters" >
+    insert into HATERS (ROLEID, UNKNOWN)
+    values (#{roleid,jdbcType=DECIMAL}, 1)
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.Haters" >
+    insert into HATERS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        ROLEID,
+      </if>
+      <if test="unknown != null" >
+        UNKNOWN,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="unknown != null" >
+        #{unknown,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.come.entity.HatersExample" resultType="java.lang.Integer" >
+    select count(*) from HATERS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update HATERS
+    <set >
+      <if test="record.roleid != null" >
+        ROLEID = #{record.roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.unknown != null" >
+        UNKNOWN = #{record.unknown,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update HATERS
+    set ROLEID = #{record.roleid,jdbcType=DECIMAL},
+      UNKNOWN = #{record.unknown,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Haters" >
+    update HATERS
+    <set >
+      <if test="unknown != null" >
+        UNKNOWN = #{unknown,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ROLEID = #{roleid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.Haters" >
+    update HATERS
+    set UNKNOWN = #{unknown,jdbcType=VARCHAR}
+    where ROLEID = #{roleid,jdbcType=DECIMAL}
+  </update>
+</mapper>

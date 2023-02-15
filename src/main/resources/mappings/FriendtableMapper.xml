@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.FriendtableMapper">
+	<sql id="FRIEND_LIST">
+		ROLEID,
+		ROLE_ID,
+		SPECIES_ID,
+		ROLENAME,
+		RACE_NAME,
+		GRADE
+	</sql>
+	<!-- 根据ID查找好友 -->
+	<select id="selectFriendsByID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Friendtable">
+		SELECT 
+		<include refid="FRIEND_LIST"/>
+		 FROM friendtable WHERE roleid = #{ roleid }
+	</select>
+
+</mapper>

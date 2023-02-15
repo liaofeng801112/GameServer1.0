@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.WechatrecordMapper" >
+  <resultMap id="BaseResultMap" type="org.come.entity.Wechatrecord" >
+    <id column="CHAT_ID" property="chatId" jdbcType="DECIMAL" />
+    <result column="CHAT_MES" property="chatMes" jdbcType="VARCHAR" />
+    <result column="CHAT_SENDID" property="chatSendid" jdbcType="DECIMAL" />
+    <result column="CHAT_GETID" property="chatGetid" jdbcType="DECIMAL" />
+    <result column="TIME" property="time" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CHAT_ID, CHAT_MES, CHAT_SENDID, CHAT_GETID, TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.come.entity.WechatrecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from WECHATRECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from WECHATRECORD
+    where CHAT_ID = #{chatId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from WECHATRECORD
+    where CHAT_ID = #{chatId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.come.entity.WechatrecordExample" >
+    delete from WECHATRECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.come.entity.Wechatrecord" >
+    insert into WECHATRECORD (CHAT_ID, CHAT_MES, CHAT_SENDID, 
+      CHAT_GETID, TIME)
+    values (seq_wechat_id.nextval, #{chatMes,jdbcType=VARCHAR}, #{chatSendid,jdbcType=DECIMAL}, 
+      #{chatGetid,jdbcType=DECIMAL}, #{time,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.come.entity.Wechatrecord" >
+    insert into WECHATRECORD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="chatId != null" >
+        CHAT_ID,
+      </if>
+      <if test="chatMes != null" >
+        CHAT_MES,
+      </if>
+      <if test="chatSendid != null" >
+        CHAT_SENDID,
+      </if>
+      <if test="chatGetid != null" >
+        CHAT_GETID,
+      </if>
+      <if test="time != null" >
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="chatId != null" >
+        #{chatId,jdbcType=DECIMAL},
+      </if>
+      <if test="chatMes != null" >
+        #{chatMes,jdbcType=VARCHAR},
+      </if>
+      <if test="chatSendid != null" >
+        #{chatSendid,jdbcType=DECIMAL},
+      </if>
+      <if test="chatGetid != null" >
+        #{chatGetid,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.come.entity.WechatrecordExample" resultType="java.lang.Integer" >
+    select count(*) from WECHATRECORD
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WECHATRECORD
+    <set >
+      <if test="record.chatId != null" >
+        CHAT_ID = #{record.chatId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.chatMes != null" >
+        CHAT_MES = #{record.chatMes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chatSendid != null" >
+        CHAT_SENDID = #{record.chatSendid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.chatGetid != null" >
+        CHAT_GETID = #{record.chatGetid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.time != null" >
+        TIME = #{record.time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WECHATRECORD
+    set CHAT_ID = #{record.chatId,jdbcType=DECIMAL},
+      CHAT_MES = #{record.chatMes,jdbcType=VARCHAR},
+      CHAT_SENDID = #{record.chatSendid,jdbcType=DECIMAL},
+      CHAT_GETID = #{record.chatGetid,jdbcType=DECIMAL},
+      TIME = #{record.time,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.come.entity.Wechatrecord" >
+    update WECHATRECORD
+    <set >
+      <if test="chatMes != null" >
+        CHAT_MES = #{chatMes,jdbcType=VARCHAR},
+      </if>
+      <if test="chatSendid != null" >
+        CHAT_SENDID = #{chatSendid,jdbcType=DECIMAL},
+      </if>
+      <if test="chatGetid != null" >
+        CHAT_GETID = #{chatGetid,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CHAT_ID = #{chatId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.come.entity.Wechatrecord" >
+    update WECHATRECORD
+    set CHAT_MES = #{chatMes,jdbcType=VARCHAR},
+      CHAT_SENDID = #{chatSendid,jdbcType=DECIMAL},
+      CHAT_GETID = #{chatGetid,jdbcType=DECIMAL},
+      TIME = #{time,jdbcType=VARCHAR}
+    where CHAT_ID = #{chatId,jdbcType=DECIMAL}
+  </update>
+</mapper>

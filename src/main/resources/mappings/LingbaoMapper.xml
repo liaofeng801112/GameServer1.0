@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.LingbaoMapper">
+
+   <!-- 查找所有灵宝 -->
+	<select id="selectAllLingbao" resultType="org.come.entity.Lingbao">
+		select BAOID,
+		BAONAME,
+		GETHARD,
+		BAOTYPE,
+		BAOACTIVE,
+		BAOSPEED,
+		BAOREPLY,
+		BAOSHOT,
+		BAOAP,
+		RESISTSHOT,
+		ASSISTANCE,
+		GOODSKILL,
+		ROLEID,
+		SKIN,
+		SKILLSUM,
+		FUSUM,
+		LINGBAOLVL,
+		LINGBAOEXE,
+		LINGBAOQIHE,
+		SKILLS,
+		KANGXING,
+		EQUIPMENT,
+		BAOQUALITY,
+		TIANFUSKILL,
+		FUSHIS from lingbao
+	</select>
+	<!-- 查找最新表ID -->
+	<select id="selectMaxID" resultType="java.math.BigDecimal">
+		select max(BAOID) from lingbao
+	</select>
+	<!-- 查找角色所有灵宝 -->
+	<select id="selectLingbaoByRoleID" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Lingbao">
+		select BAOID,
+		BAONAME,
+		GETHARD,
+		BAOTYPE,
+		BAOACTIVE,
+		BAOSPEED,
+		BAOREPLY,
+		BAOSHOT,
+		BAOAP,
+		RESISTSHOT,
+		ASSISTANCE,
+		GOODSKILL,
+		ROLEID,
+		SKIN,
+		SKILLSUM,
+		FUSUM,
+		LINGBAOLVL,
+		LINGBAOEXE,
+		LINGBAOQIHE,
+		SKILLS,
+		KANGXING,
+		EQUIPMENT,
+		BAOQUALITY,
+		TIANFUSKILL,
+		FUSHIS from lingbao where roleid = #{ roleid }
+	</select>
+
+	<!-- 删除灵宝 -->
+	<delete id="deleteLingbao" parameterType="java.math.BigDecimal">
+		delete from
+		lingbao
+		where baoid=#{baoid}
+	</delete>
+
+	<!-- 修改灵宝属性 -->
+	<update id="updateLingbao" parameterType="org.come.entity.Lingbao">
+		UPDATE lingbao SET
+		roleid = #{ roleid },
+		baoactive = #{baoactive},baospeed = #{baospeed},
+		baoreply
+		=#{baoreply},baoshot = #{baoshot},baoap = #{baoap},resistshot
+		=#{resistshot},assistance = #{assistance},goodskill = #{goodskill},
+		skillsum = #{skillsum},fusum = #{fusum},lingbaolvl =
+		#{lingbaolvl},lingbaoexe = #{lingbaoexe},
+		lingbaoqihe =
+		#{lingbaoqihe},skills = #{skills},kangxing =
+		#{kangxing},equipment=#{equipment},baoquality = #{baoquality},fushis =
+		#{ fushis }
+		WHERE baoid = #{ baoid }
+	</update>
+
+	<!-- 添加灵宝 -->
+	<insert id="insertLingbao" parameterType="org.come.entity.Lingbao">
+		insert into lingbao(BAOID,BAONAME,GETHARD,BAOTYPE,BAOACTIVE,BAOSPEED,BAOREPLY,BAOSHOT,BAOAP,RESISTSHOT,ASSISTANCE,GOODSKILL,ROLEID,SKIN,SKILLSUM,FUSUM,LINGBAOLVL,LINGBAOEXE,LINGBAOQIHE,SKILLS,KANGXING,EQUIPMENT,baoquality,TIANFUSKILL,fushis)
+		values(#{baoid},#{baoname},#{gethard},#{baotype},#{baoactive},#{baospeed},
+		#{baoreply},#{baoshot},#{baoap},#{resistshot},#{assistance},#{goodskill},
+		#{roleid},#{skin},#{skillsum},#{fusum},#{lingbaolvl},#{lingbaoexe},
+		#{lingbaoqihe},#{skills},#{kangxing},#{equipment},#{baoquality},#{tianfuskill},
+		#{fushis})
+	</insert>	
+	<resultMap type="org.come.entity.LingbaoRoleUser" id="lingbaoRoleUser">
+		<result column="BAOID" property="baoid"/>
+		<result column="BAONAME" property="baoname"/>
+		<result column="GETHARD" property="gethard"/>
+		<result column="BAOTYPE" property="baotype"/>
+		<result column="BAOACTIVE" property="baoactive"/>
+		<result column="BAOSPEED" property="baospeed"/>
+		<result column="BAOREPLY" property="baoreply"/>
+		<result column="BAOSHOT" property="baoshot"/>
+		<result column="BAOAP" property="baoap"/>
+		<result column="RESISTSHOT" property="resistshot"/>
+		<result column="ASSISTANCE" property="assistance"/>
+		<result column="GOODSKILL" property="goodskill"/>
+		<result column="ROLEID" property="roleid"/>
+		<result column="SKIN" property="skin"/>
+		<result column="SKILLSUM" property="skillsum"/>
+		<result column="FUSUM" property="fusum"/>
+		<result column="LINGBAOLVL" property="lingbaolvl"/>
+		<result column="LINGBAOEXE" property="lingbaoexe"/>
+		<result column="LINGBAOQIHE" property="lingbaoqihe"/>
+		<result column="SKILLS" property="skills"/>
+		<result column="KANGXING" property="kangxing"/>
+		<result column="EQUIPMENT" property="equipment"/>
+		<result column="BAOQUALITY" property="baoquality"/>
+		<result column="TIANFUSKILL" property="tianfuskill"/>
+		<result column="FUSHIS" property="fushis"/>
+		<result column="ROLENAME" property="rolename"/>
+		<result column="USER_ID" property="user_id"/>
+		<result column="USERNAME" property="username"/>
+	</resultMap>
+	
+	<select id="selectLingBaoRU" resultMap="lingbaoRoleUser">
+		SELECT * FROM 
+		(
+		    SELECT A.* , ROWNUM RN  from 
+		    ( 
+		    	SELECT BAOID,BAONAME,GETHARD,BAOTYPE,BAOACTIVE,BAOSPEED,LINGBAOLVL,TIANFUSKILL,
+				BAOAP,GOODSKILL,ROLENAME,SKILLSUM,FUSUM,LINGBAOEXE,LINGBAOQIHE,SKILLS,KANGXING,
+				BAOQUALITY,FUSHIS FROM LINGBAO_ROLE_USERTABLE 
+				<where>
+					<if test="lru.baoname != null and lru.baoname != '' ">
+						AND BAONAME LIKE CONCAT('%' , CONCAT( #{lru.baoname} , '%' ))
+					</if>
+					<if test="lru.rolename != null and lru.rolename != '' ">
+						AND ROLENAME LIKE CONCAT('%' , CONCAT( #{lru.rolename} , '%' ))
+					</if>
+				</where>
+				${lru.orderBy} 
+		    ) A  
+		    WHERE ROWNUM &lt; #{lru.end} 
+		 ) 
+		 WHERE RN &gt;= #{lru.start} 
+	</select>
+	
+	<select id="selectLingBaoRUCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (
+			SELECT BAOID,BAONAME,GETHARD,BAOTYPE,BAOACTIVE,BAOSPEED,LINGBAOLVL,TIANFUSKILL,
+				BAOAP,GOODSKILL,ROLENAME,SKILLSUM,FUSUM,LINGBAOEXE,LINGBAOQIHE,SKILLS,KANGXING,
+				BAOQUALITY,FUSHIS FROM LINGBAO_ROLE_USERTABLE 
+				<where>
+					<if test="lru.baoname != null and lru.baoname != '' ">
+						AND BAONAME LIKE CONCAT('%' , CONCAT( #{lru.baoname} , '%' ))
+					</if>
+					<if test="lru.rolename != null and lru.rolename != '' ">
+						AND ROLENAME LIKE CONCAT('%' , CONCAT( #{lru.rolename} , '%' ))
+					</if>
+				</where>
+		)
+	</select>
+	
+	
+	<!-- HGC-2020-01-20 -->
+	<!-- 批量删除灵宝 -->
+	<delete id="deleteLingbaoList" parameterType="java.util.List">
+	delete from
+	lingbao
+	where baoid in
+		<foreach collection="list" index="index" item="baoid" open="("
+			close=")" separator=",">
+			#{baoid}
+		</foreach>
+	</delete>
+
+	<!-- 批量添加灵宝 -->
+	<insert id="insertLingbaoList" parameterType="java.util.List">
+		insert into
+		lingbao
+		(BAOID,BAONAME,GETHARD,BAOTYPE,BAOACTIVE,BAOSPEED,BAOREPLY,BAOSHOT,BAOAP,RESISTSHOT,
+		ASSISTANCE,GOODSKILL,ROLEID,SKIN,SKILLSUM,FUSUM,LINGBAOLVL,LINGBAOEXE,LINGBAOQIHE,
+		SKILLS,KANGXING,EQUIPMENT,baoquality,TIANFUSKILL,fushis)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			select
+			#{item.baoid},#{item.baoname},#{item.gethard},#{item.baotype},#{item.baoactive},#{item.baospeed},
+			#{item.baoreply},#{item.baoshot},#{item.baoap},#{item.resistshot},#{item.assistance},
+			#{item.goodskill},#{item.roleid},#{item.skin},#{item.skillsum},#{item.fusum},#{item.lingbaolvl},
+			#{item.lingbaoexe},#{item.lingbaoqihe},#{item.skills},#{item.kangxing},#{item.equipment},
+			#{item.baoquality},#{item.tianfuskill}, #{item.fushis} form dual
+		</foreach>
+	</insert>
+	<!-- 批量修改灵宝属性 -->
+	<update id="updateLingbaoList" parameterType="java.util.List">
+		UPDATE lingbao
+		<trim prefix="set" prefixOverrides=",">
+			<trim prefix="roleid =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.roleid}
+				</foreach>
+			</trim>
+			<trim prefix="baoactive =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.baoactive}
+				</foreach>
+			</trim>
+			<trim prefix="baospeed =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.baospeed}
+				</foreach>
+			</trim>
+			<trim prefix="baoreply =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.baoreply}
+				</foreach>
+			</trim>
+			<trim prefix="baoshot =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.baoshot}
+				</foreach>
+			</trim>
+			<trim prefix="baoap =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.baoap}
+				</foreach>
+			</trim>
+			<trim prefix="resistshot =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.resistshot}
+				</foreach>
+			</trim>
+			<trim prefix="assistance =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.assistance}
+				</foreach>
+			</trim>
+			<trim prefix="goodskill =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.goodskill}
+				</foreach>
+			</trim>
+			<trim prefix="skillsum =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.skillsum}
+				</foreach>
+			</trim>
+			<trim prefix="fusum =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.fusum}
+				</foreach>
+			</trim>
+			<trim prefix="lingbaolvl =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.lingbaolvl}
+				</foreach>
+			</trim>
+			<trim prefix="lingbaoexe =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.lingbaoexe}
+				</foreach>
+			</trim>
+			<trim prefix="lingbaoqihe =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.lingbaoqihe}
+				</foreach>
+			</trim>
+			<trim prefix="skills =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.skills}
+				</foreach>
+			</trim>
+			<trim prefix="kangxing =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.kangxing}
+				</foreach>
+			</trim>
+			<trim prefix="equipment =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.equipment}
+				</foreach>
+			</trim>
+			<trim prefix="baoquality =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.baoquality}
+				</foreach>
+			</trim>
+			<trim prefix="fushis =case" suffix="end,">
+				<foreach collection="list" index="index" item="item">
+					when baoid =
+					#{item.baoid} then #{item.fushis}
+				</foreach>
+			</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="item" index="index">
+			baoid=#{item.baoid}
+		</foreach>
+	</update>
+
+</mapper>

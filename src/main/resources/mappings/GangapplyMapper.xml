@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.come.mapper.GangapplyMapper">
+	<!-- 加入帮派申请表 -->
+	<insert id="insertIntGangapple" parameterType="org.come.entity.Gangapply">
+		insert into
+		GANGAPPLY(GAID,GANGID,ROLEID)
+		values(seq_gangapply_id.nextval,#{gangid},#{roleid})
+	</insert>
+	<!-- 判断申请表是否有此人 -->
+	<select id="selectGangApply" resultType="org.come.entity.Gangapply">
+		select GAID,
+		GANGID,
+		ROLEID from GANGAPPLY where ROLEID = #{ roleid } and GANGID = #{ gangid }
+	</select>
+	<!-- 删除该申请人 全部-->
+	<delete id="deleteGangappleAll">
+		delete gangapply where ROLEID = #{ roleid }
+	</delete>
+	<!-- 删除该申请人 局部-->
+	<delete id="deleteGangapple">
+		delete gangapply where ROLEID = #{ roleid } and GANGID = #{ gangid }
+	</delete>
+	<!-- 删除该申请人 局部-->
+	<delete id="deleteGangappleGang">
+		delete gangapply where GANGID = #{ gangid }
+	</delete>
+	<!-- 帮派申请表 -->
+	<select id="getGangapplytables" parameterType="java.math.BigDecimal"
+		resultType="org.come.entity.Gangapplytable">
+		select ROLENAME,
+		RACE_NAME,
+		GRADE,
+		GANGID,
+		ROLE_ID from gangapplytable where GANGID = #{ gangid }
+	</select>
+</mapper>
